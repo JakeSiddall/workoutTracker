@@ -1,0 +1,4 @@
+{
+  "RESTIC_REPOSITORY": "sftp:CONFIRM_REMOTE_HOST:/CONFIRM_OFF_DEVICE_PATH",
+  "RESTIC_PASSWORD_FILE": "/etc/workout-tracker/restic-password"
+}

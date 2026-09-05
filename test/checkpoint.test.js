@@ -37,6 +37,10 @@ test('JAK-6 complete Strength A persists exact snapshots and actuals',()=>{
   const pull=s.exercises[2]; s=addReps(db,s.id,pull.id,{requestId:'pull-6',revision:s.revision,reps:6}); const pullDeadline=s.rest_ends_at;
   s=addReps(db,s.id,pull.id,{requestId:'pull-4',revision:s.revision,reps:4}); assert.equal(s.exercises[2].actual_total_reps,10);assert.ok(s.rest_ends_at>=pullDeadline);
   const pullRetry=addReps(db,s.id,pull.id,{requestId:'pull-4',revision:s.revision-1,reps:4});assert.equal(pullRetry.exercises[2].actual_total_reps,10);
+  // Equal clock timestamps must preserve insertion order, even with UUIDs that
+  // sort in the opposite order. This reproduces the original flaky CI failure.
+  db.prepare("UPDATE pullup_entries SET created_at='2026-09-05T00:00:00.000Z'").run();
+  db.prepare("UPDATE pullup_entries SET id=CASE reps WHEN 6 THEN 'zz-first' ELSE 'aa-second' END").run();
   s=undoReps(db,s.id,pull.id,{requestId:rid(),revision:s.revision});assert.equal(s.exercises[2].actual_total_reps,6);
   s=addReps(db,s.id,pull.id,{requestId:rid(),revision:s.revision,reps:8});assert.equal(s.exercises[2].actual_total_reps,14);
   s=resolveExercise(db,s.id,pull.id,{requestId:rid(),revision:s.revision},'completed');

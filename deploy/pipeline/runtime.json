@@ -1,0 +1,13 @@
+{
+  "format": 1,
+  "container_port": 3001,
+  "user": "1000:1000",
+  "memory": "512m",
+  "environment": {
+    "NODE_ENV": "production",
+    "HOST": "0.0.0.0",
+    "PORT": "3001",
+    "WORKOUT_DB": "/data/workouts.sqlite",
+    "APP_ORIGIN": "https://lift.jakesiddall.com"
+  }
+}
