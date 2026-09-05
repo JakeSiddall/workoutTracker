@@ -217,11 +217,14 @@ class RecoveryTests(unittest.TestCase):
         self.assertTrue(list(self.root.glob('pre-restore-*')))
 
     def test_successful_upgrade_and_rollback_record_full_manifest(self):
-        self.first()
+        old_release = release('a')
+        old_release['runtime']['memory'] = '256m'
+        self.control.deploy(old_release, True)
         self.control.deploy(release('b'), True)
-        self.assertEqual(self.control.state()['previous'], release('a'))
+        self.assertEqual(self.control.state()['previous'], old_release)
         self.control.deploy(None, True, rollback=True)
-        self.assertEqual(self.control.state()['current'], release('a'))
+        self.assertEqual(self.control.state()['current'], old_release)
+        self.assertEqual(self.docker.running['runtime']['memory'], '256m')
         self.assertEqual(self.control.state()['previous'], release('b'))
 
     def test_target_port_drift_is_rejected(self):

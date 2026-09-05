@@ -79,7 +79,7 @@ class Docker:
         wait(NAME)
 
     def check(self, release, data):
-        smoke(release['image'], data)
+        smoke(release['image'], data, release['runtime'])
 
 class Restic:
     def __init__(self, config):

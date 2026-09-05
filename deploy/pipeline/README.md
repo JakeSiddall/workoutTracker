@@ -30,8 +30,9 @@ promise of byte-identical output. Store approved digests and their registry imag
 Protect `main` with PR review and the `checks` status before daily use. Restrict
 workflow changes to trusted review. Configure those GitHub rules explicitly; YAML
 alone does not enforce branch protection. Controller updates are manual, reviewed
-host changes; deployment never overwrites its own installed executable. A runtime
-configuration change requires installing/reviewing the matching controller first.
+host changes; deployment never overwrites its own installed executable. Supported
+memory-limit changes travel with the release and roll back with it. A change to
+the fixed port, UID, mount or environment contract requires a controller review.
 
 ## Host contract and prerequisites
 

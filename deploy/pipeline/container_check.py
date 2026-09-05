@@ -22,18 +22,25 @@ def wait(container):
             time.sleep(1)
     raise RuntimeError('Container failed database readiness; inspect private host logs')
 
-def smoke(image, data_dir):
+def smoke(image, data_dir, runtime=None):
     """Start and stop the app on the provided disposable data directory."""
     container = 'workout-check-' + uuid.uuid4().hex
     # Test data only. Production directory permissions are provisioned by JAK-9.
     os.chmod(data_dir, 0o777)
     for path in Path(data_dir).iterdir():
-        os.chmod(path, 0o666)
+        # Fresh files may belong to container UID 1000 rather than the hosted
+        # runner. They already have the right owner for restart; don't chmod them.
+        if os.geteuid() == 0 or path.stat().st_uid == os.geteuid():
+            os.chmod(path, 0o666)
     try:
-        run('docker', 'run', '-d', '--name', container, '--network', 'none',
+        runtime = runtime or json.loads(Path(__file__).with_name('runtime.json').read_text())
+        args = ['docker', 'run', '-d', '--name', container, '--network', 'none',
             '--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges',
-            '--memory', '512m', '--pids-limit', '128', '--tmpfs', '/tmp:rw,nosuid,size=32m',
-            '-v', f'{Path(data_dir).resolve()}:/data', image)
+            '--memory', runtime['memory'], '--user', runtime['user'], '--pids-limit', '128', '--tmpfs', '/tmp:rw,nosuid,size=32m',
+            '-v', f'{Path(data_dir).resolve()}:/data']
+        for key, value in runtime['environment'].items():
+            args += ['-e', f'{key}={value}']
+        run(*args, image)
         wait(container)
         run('docker', 'stop', '--time', '20', container)
     finally:
