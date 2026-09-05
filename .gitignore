@@ -6,3 +6,13 @@ data/
 *.sqlite-wal
 .DS_Store
 coverage/
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+deploy/pipeline/target.json
+restic.env
+restic.json
+restic-password

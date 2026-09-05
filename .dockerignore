@@ -1,0 +1,18 @@
+# Allowlist: even future private files are excluded from the build context.
+**
+!package.json
+!package-lock.json
+!index.html
+!vite.config.js
+!src/
+!src/**
+!server/
+!server/**
+!shared/
+!shared/**
+!deploy/
+!deploy/pipeline/
+!deploy/pipeline/Dockerfile
+**/*.sqlite*
+**/*.db*
+**/.env*

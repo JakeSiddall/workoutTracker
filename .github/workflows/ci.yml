@@ -1,0 +1,92 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Install encrypted backup test dependency
+        run: sudo apt-get update && sudo apt-get install -y restic
+      - run: python3 -m unittest discover -s deploy/pipeline/tests -v
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Reject tracked private state
+        run: python3 deploy/pipeline/check_tracked.py
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: deploy/pipeline/Dockerfile
+          platforms: linux/arm64
+          load: true
+          tags: workout-ci:test
+          build-args: SOURCE_REVISION=${{ github.sha }}
+      - name: Fresh database and container restart
+        run: python3 deploy/pipeline/container_check.py workout-ci:test
+
+  publish:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - name: Build candidate
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: deploy/pipeline/Dockerfile
+          platforms: linux/arm64
+          load: true
+          tags: ghcr.io/jakesiddall/workouttracker:sha-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          build-args: SOURCE_REVISION=${{ github.sha }}
+      - name: Test exact publish candidate
+        env:
+          IMAGE: ghcr.io/jakesiddall/workouttracker:sha-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+        run: python3 deploy/pipeline/container_check.py "$IMAGE"
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push tested image and record exact digest
+        env:
+          IMAGE: ghcr.io/jakesiddall/workouttracker:sha-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          docker push "$IMAGE"
+          docker inspect "$IMAGE" --format '{{index .RepoDigests 0}}' > image.txt
+          python3 deploy/pipeline/release.py image.txt release.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: workout-release-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            release.json
+            deploy/pipeline/
+          if-no-files-found: error
+          retention-days: 90

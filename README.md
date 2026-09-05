@@ -26,3 +26,7 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:5173`. The API listens only on `127.0.0.1:3001`; SQLite data is stored in the ignored `data/` directory. Use `npm test` and `npm run build` for verification.
+
+CI/CD preparation and the manual release/backup/recovery contract are documented in
+[deploy/pipeline/README.md](deploy/pipeline/README.md). Hosted CI does not deploy to
+the Pi. Production activation remains gated on the JAK-9 host and backup setup.

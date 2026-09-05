@@ -1,0 +1,7 @@
+{
+  "approved": false,
+  "root": "/srv/apps/workout-tracker",
+  "host_port": 3002,
+  "backup_config": "/etc/workout-tracker/restic.json",
+  "contract_note": "JAK-9 must confirm these values, provision ownership and backup configuration, and approve the target before enabling. Host Caddy must route to loopback; no port on a public interface."
+}
