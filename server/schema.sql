@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   notes TEXT,
   active_exercise_order INTEGER NOT NULL DEFAULT 1,
   rest_ends_at TEXT,
+  saved_for_later_at TEXT,
   revision INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
@@ -121,6 +122,11 @@ CREATE TABLE IF NOT EXISTS mutation_requests (
   request_id TEXT PRIMARY KEY,
   response_json TEXT NOT NULL,
   created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS exit_mutation_requests (
+  request_id TEXT PRIMARY KEY REFERENCES mutation_requests(request_id),
+  request_fingerprint TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS app_settings (
