@@ -22,8 +22,13 @@ September 5, 2026. This evidence applies to local preparation, not production ac
   or credentials were used.
 - `git diff --check` and tracked private-state guard passed.
 
-Local Docker CLI is present but its daemon is stopped. Container execution and
-Node 24/native ARM64 compatibility must be confirmed by the hosted PR check.
+Local Docker CLI is present but its daemon is stopped. Hosted CI run
+[33988367662](https://github.com/JakeSiddall/workoutTracker/actions/runs/33988367662)
+passed on `84e1037`, confirming Node 24/native ARM64 build, fresh database startup,
+and container restart, plus application and recovery tests. The earlier run exposed
+and prompted a fix for trying to chmod container-owned test data as the host user.
+Actions are subsequently pinned to current releases to remove deprecated action
+runtime warnings; the draft PR checks report verification of that final revision.
 No workflow has been merged or production operation executed by this workstream.
 
 Required before activation: green hosted container check, reviewed merge and
