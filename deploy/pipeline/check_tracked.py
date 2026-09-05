@@ -6,7 +6,7 @@ import subprocess
 files = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
 bad = [f for f in files if f and (
     re.search(r"\.(?:sqlite|db)(?:-(?:wal|shm))?$", f)
-    or PurePosixPath(f).name in {".env", "restic.env", "target.json"}
+    or PurePosixPath(f).name in {".env", "restic.env", "restic.json", "restic-password", "target.json"}
     or f.startswith(("data/", "backups/"))
 )]
 if bad:

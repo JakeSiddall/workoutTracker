@@ -49,8 +49,9 @@ JAK-9 must explicitly approve and provision:
   `approved:false` until these prerequisites and explicit first-release approval
   exist. Changing the root/port after a release requires a separate reviewed host
   migration; the controller rejects drift from recorded successful state.
-- An off-device restic repository, credentials, and password file. The destination
-  is NOT selected yet. `restic.example.json` is only a placeholder; install the
+- An off-device restic repository, credentials, and password file. Jake selected
+  Backblaze B2; the exact bucket/endpoint and credentials are not provisioned yet.
+  `restic.example.json` is only a placeholder; install the
   real JSON as `/etc/workout-tracker/restic.json` mode `0600`, and keep password and
   backend credentials outside source control. Provision with `restic init` only
   for the approved destination. Keep the password/recovery credentials in a second
@@ -122,8 +123,12 @@ After an approved destination is tested, JAK-9 may install and enable the includ
 backup service/timer. It runs nightly and catches up after downtime. Verify both
 `systemctl list-timers` and an actual successful service run. A failed backup exits
 nonzero for service monitoring. Retention/deletion is deliberately manual in this
-first release: choose an off-device retention policy and monitor capacity before
-daily use. Nothing prunes images, release manifests, or recovery databases.
+first release. The proposed B2 retention is 14 daily, 8 weekly and 12 monthly;
+confirm that policy and monitor capacity before daily use. Any future restic
+forget/prune must hold `.operation.lock`, protect snapshots referenced by release
+state and the transaction journal, and use a grouping policy such as host rather
+than the changing temporary source paths. Nothing currently prunes images,
+release manifests, or recovery databases.
 
 To restore live data, prepare a JSON file with the exact receipt `{id, path}` and
 explicitly approve losing all writes since that snapshot:

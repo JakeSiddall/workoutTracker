@@ -32,7 +32,7 @@ runtime warnings; the draft PR checks report verification of that final revision
 No workflow has been merged or production operation executed by this workstream.
 
 Required before activation: green hosted container check, reviewed merge and
-published digest artifact, approved/provisioned target, off-device restic
-destination and separately recoverable password, actual Pi failed-update/rollback
+published digest artifact, approved/provisioned target, selected Backblaze B2
+bucket/credentials and separately recoverable restic password, actual Pi failed-update/rollback
 and restore drills, verified nightly backup service, and JAK-9 private HTTPS/phone
 checks. JAK-11 remains incomplete until the host-dependent gates pass.

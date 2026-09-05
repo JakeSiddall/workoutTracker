@@ -14,3 +14,5 @@ coverage/
 __pycache__/
 deploy/pipeline/target.json
 restic.env
+restic.json
+restic-password
