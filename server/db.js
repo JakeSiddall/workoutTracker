@@ -1,14 +1,18 @@
 import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { generateWarmups } from '../shared/warmups.js';
+import { expireSavedSessions, finalizeSession, validateSessionCalendar } from './session-lifecycle.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const now = () => new Date().toISOString();
 const uid = (prefix) => `${prefix}-${randomUUID()}`;
 const json = (value) => JSON.stringify(value);
+const clocks = new WeakMap();
+const instant = db => (clocks.get(db) || (() => new Date()))();
+export const finalizeSavedSessions = db => expireSavedSessions(db, instant(db));
 
 const exerciseSeed = [
   ['bench','Bench press','sets','external_total','lb',45,5,1,1],
@@ -41,13 +45,21 @@ const prescriptions = [
   ['c-pushups','strength-c','pushups',6,2,8,15,null,null,null,90,null,0,0]
 ];
 
-export function openDatabase(filename = process.env.WORKOUT_DB || path.join(process.cwd(), 'data', 'workouts.sqlite')) {
+export function openDatabase(filename = process.env.WORKOUT_DB || path.join(process.cwd(), 'data', 'workouts.sqlite'), {clock = () => new Date()} = {}) {
   fs.mkdirSync(path.dirname(filename), { recursive: true });
   const db = new Database(filename);
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   db.exec(fs.readFileSync(path.join(here, 'schema.sql'), 'utf8'));
+  clocks.set(db, clock);
+  // Additive migration: existing databases and previous app versions remain readable.
+  db.transaction(() => {
+    if (!db.prepare('PRAGMA table_info(sessions)').all().some(column => column.name === 'saved_for_later_at')) {
+      db.exec('ALTER TABLE sessions ADD COLUMN saved_for_later_at TEXT');
+    }
+  })();
   seed(db);
+  finalizeSavedSessions(db);
   return db;
 }
 
@@ -70,6 +82,7 @@ function seed(db) {
 }
 
 export function getToday(db) {
+  finalizeSavedSessions(db);
   const templates = db.prepare(`SELECT t.*, GROUP_CONCAT(e.name, '||') exercise_names
     FROM workout_templates t JOIN template_exercises te ON te.template_id=t.id
     JOIN exercises e ON e.id=te.exercise_id WHERE t.active=1 AND t.archived=0
@@ -116,6 +129,8 @@ function createSets(db, sxId, p, load) {
 }
 
 export function createSession(db, body) {
+  validateSessionCalendar(body.performedDate, body.timezone);
+  finalizeSavedSessions(db);
   return db.transaction(() => {
     const existing = db.prepare('SELECT response_json FROM mutation_requests WHERE request_id=?').get(body.requestId);
     if (existing) return JSON.parse(existing.response_json);
@@ -123,12 +138,13 @@ export function createSession(db, body) {
     if (active) throw Object.assign(new Error('A workout is already active'), { status: 409, activeSessionId: active.id });
     const id = snapshotSession(db, body.templateId, body);
     const result = getSession(db, id);
-    db.prepare('INSERT INTO mutation_requests VALUES (?,?,?)').run(body.requestId, json(result), now());
+    db.prepare('INSERT INTO mutation_requests(request_id,response_json,created_at) VALUES (?,?,?)').run(body.requestId, json(result), now());
     return result;
   })();
 }
 
 export function getSession(db, id) {
+  finalizeSavedSessions(db);
   const session = db.prepare('SELECT * FROM sessions WHERE id=?').get(id);
   if (!session) return null;
   const exercises = db.prepare('SELECT * FROM session_exercises WHERE session_id=? ORDER BY sort_order').all(id).map((e) => ({
@@ -140,17 +156,34 @@ export function getSession(db, id) {
   return {...session, exercises};
 }
 
-function mutate(db, sessionId, body, action) {
+function mutate(db, sessionId, body, action, {allowCompleted=false, actionKey=null} = {}) {
+  if (typeof body.requestId !== 'string' || !body.requestId.trim() || !Number.isSafeInteger(body.revision) || body.revision < 0) {
+    throw Object.assign(new Error('requestId and a nonnegative integer revision are required'), {status:400});
+  }
+  // Commit expiration before checking a stale writer so a 409 cannot roll it back.
+  finalizeSavedSessions(db);
+  const fingerprint = actionKey ? createHash('sha256').update(json({sessionId,actionKey,body:Object.fromEntries(Object.entries(body).sort(([a],[b])=>a.localeCompare(b)))})).digest('hex') : null;
   return db.transaction(() => {
-    const prior = db.prepare('SELECT response_json FROM mutation_requests WHERE request_id=?').get(body.requestId);
-    if (prior) return JSON.parse(prior.response_json);
+    const prior = db.prepare(`SELECT m.*,e.request_fingerprint FROM mutation_requests m
+      LEFT JOIN exit_mutation_requests e USING(request_id) WHERE m.request_id=?`).get(body.requestId);
+    if (prior) {
+      const result = JSON.parse(prior.response_json);
+      if (result.id !== sessionId || (fingerprint && prior.request_fingerprint !== fingerprint)) {
+        throw Object.assign(new Error('requestId already used for another mutation'), {status:409});
+      }
+      return result;
+    }
     const session = db.prepare('SELECT * FROM sessions WHERE id=?').get(sessionId);
     if (!session) throw Object.assign(new Error('Session not found'), {status:404});
     if (session.revision !== body.revision) throw Object.assign(new Error('Session changed elsewhere'), {status:409,current:getSession(db,sessionId)});
+    if (session.status !== 'in_progress' && !(allowCompleted && session.status === 'completed')) {
+      throw Object.assign(new Error('Workout is no longer in progress'), {status:409,current:getSession(db,sessionId)});
+    }
     action(session);
     db.prepare('UPDATE sessions SET revision=revision+1, updated_at=? WHERE id=?').run(now(), sessionId);
     const result = getSession(db, sessionId);
-    db.prepare('INSERT INTO mutation_requests VALUES (?,?,?)').run(body.requestId, json(result), now());
+    db.prepare('INSERT INTO mutation_requests(request_id,response_json,created_at) VALUES (?,?,?)').run(body.requestId, json(result), now());
+    if (fingerprint) db.prepare('INSERT INTO exit_mutation_requests VALUES (?,?)').run(body.requestId, fingerprint);
     return result;
   })();
 }
@@ -188,5 +221,32 @@ export function addReps(db,sessionId,sxId,body){requireNumber(body.reps,'reps',{
 export function undoReps(db,sessionId,sxId,body){return mutate(db,sessionId,body,()=>{const last=db.prepare('SELECT * FROM pullup_entries WHERE session_exercise_id=? AND undone_at IS NULL ORDER BY rowid DESC LIMIT 1').get(sxId);if(!last)throw Object.assign(new Error('Nothing to undo'),{status:400});db.prepare('UPDATE pullup_entries SET undone_at=? WHERE id=?').run(now(),last.id);db.prepare('UPDATE session_exercises SET actual_total_reps=MAX(0,COALESCE(actual_total_reps,0)-?) WHERE id=?').run(last.reps,sxId)})}
 export function correctTotal(db,sessionId,sxId,body){requireNumber(body.actualTotalReps,'actualTotalReps',{integer:true});requireNumber(body.actualAddedLoad,'actualAddedLoad');return mutate(db,sessionId,body,()=>{db.prepare('UPDATE session_exercises SET actual_total_reps=?,actual_added_load=? WHERE id=? AND session_id=?').run(body.actualTotalReps,body.actualAddedLoad,sxId,sessionId)})}
 export function resolveExercise(db,sessionId,sxId,body,status){return mutate(db,sessionId,body,()=>{if(body.actualDurationSeconds!=null)requireNumber(body.actualDurationSeconds,'actualDurationSeconds',{integer:true});const info=db.prepare('UPDATE session_exercises SET status=?,actual_duration_seconds=? WHERE id=? AND session_id=?').run(status,body.actualDurationSeconds??null,sxId,sessionId);if(!info.changes)throw Object.assign(new Error('Exercise not found'),{status:404});db.prepare("UPDATE sets SET status='skipped' WHERE session_exercise_id=? AND status='pending'").run(sxId);db.prepare('UPDATE sessions SET active_exercise_order=active_exercise_order+1,rest_ends_at=NULL WHERE id=?').run(sessionId)})}
-export function completeSession(db,sessionId,body){return mutate(db,sessionId,body,()=>{db.prepare("UPDATE session_exercises SET status=CASE WHEN status='pending' THEN 'skipped' ELSE status END WHERE session_id=?").run(sessionId);db.prepare("UPDATE sets SET status='skipped' WHERE status='pending' AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(sessionId);db.prepare("UPDATE sessions SET status='completed',actual_ended_at=?,rest_ends_at=NULL WHERE id=?").run(now(),sessionId)})}
-export function correctSet(db,sessionId,setId,body){requireNumber(body.actualLoad,'actualLoad');requireNumber(body.actualReps,'actualReps',{integer:true});return mutate(db,sessionId,body,()=>{const info=db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=? WHERE id=? AND status='completed' AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(body.actualLoad,body.actualReps,body.rir??null,setId,sessionId);if(!info.changes)throw Object.assign(new Error('Completed set not found'),{status:404})})}
+export function completeSession(db, sessionId, body) {
+  return mutate(db, sessionId, body, () => finalizeSession(db, sessionId, instant(db).toISOString()), {actionKey:'complete'});
+}
+
+export function cancelSession(db, sessionId, body) {
+  return mutate(db, sessionId, body, () => {
+    db.prepare("UPDATE sessions SET status='abandoned',actual_ended_at=?,rest_ends_at=NULL WHERE id=?")
+      .run(instant(db).toISOString(), sessionId);
+  }, {actionKey:'cancel'});
+}
+
+export function saveSessionForLater(db, sessionId, body) {
+  const saved = mutate(db, sessionId, body, session => {
+    validateSessionCalendar(session.performed_local_date, session.timezone);
+    db.prepare('UPDATE sessions SET saved_for_later_at=? WHERE id=?').run(instant(db).toISOString(), sessionId);
+  }, {actionKey:'save-for-later'});
+  // A first save after midnight is immediately final, including on retries.
+  finalizeSavedSessions(db);
+  const current = getSession(db, sessionId);
+  return current.status !== 'in_progress' ? current : saved;
+}
+
+export function resumeSession(db, sessionId, body) {
+  const resumed = mutate(db, sessionId, body, () => {}, {actionKey:'resume'});
+  const current = getSession(db, sessionId);
+  return current.status !== 'in_progress' ? current : resumed;
+}
+
+export function correctSet(db,sessionId,setId,body){requireNumber(body.actualLoad,'actualLoad');requireNumber(body.actualReps,'actualReps',{integer:true});return mutate(db,sessionId,body,()=>{const info=db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=? WHERE id=? AND status='completed' AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(body.actualLoad,body.actualReps,body.rir??null,setId,sessionId);if(!info.changes)throw Object.assign(new Error('Completed set not found'),{status:404})}, {allowCompleted:true})}

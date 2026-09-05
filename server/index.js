@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { openDatabase,getToday,createSession,getSession,setTarget,logSet,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet } from './db.js';
+import { openDatabase,getToday,createSession,getSession,setTarget,logSet,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet,cancelSession,saveSessionForLater,resumeSession,finalizeSavedSessions } from './db.js';
 
 const app=express(); const db=openDatabase();
 app.use((req,res,next)=>{
@@ -38,9 +38,16 @@ app.patch('/api/sessions/:id/exercises/:exerciseId/total',asyncRoute((req,res)=>
 app.post('/api/sessions/:id/exercises/:exerciseId/complete',asyncRoute((req,res)=>res.json(resolveExercise(db,req.params.id,req.params.exerciseId,req.body,'completed'))));
 app.post('/api/sessions/:id/exercises/:exerciseId/skip',asyncRoute((req,res)=>res.json(resolveExercise(db,req.params.id,req.params.exerciseId,req.body,'skipped'))));
 app.post('/api/sessions/:id/complete',asyncRoute((req,res)=>res.json(completeSession(db,req.params.id,req.body))));
+app.post('/api/sessions/:id/cancel',asyncRoute((req,res)=>res.json(cancelSession(db,req.params.id,req.body))));
+app.post('/api/sessions/:id/save-for-later',asyncRoute((req,res)=>res.json(saveSessionForLater(db,req.params.id,req.body))));
+app.post('/api/sessions/:id/resume',asyncRoute((req,res)=>res.json(resumeSession(db,req.params.id,req.body))));
 app.patch('/api/sets/:setId',asyncRoute((req,res)=>res.json(correctSet(db,req.body.sessionId,req.params.setId,req.body))));
 app.use((err,_req,res,_next)=>{console.error(err);const body={error:err.message};if(err.current)body.current=err.current;if(err.activeSessionId)body.activeSessionId=err.activeSessionId;res.status(err.status||500).json(body)});
 const dist=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../dist');
 app.use(express.static(dist)); app.get('/{*splat}',(_req,res,next)=>res.sendFile(path.join(dist,'index.html'),e=>e&&next()));
 const port=Number(process.env.PORT||3001); const host=process.env.HOST||'127.0.0.1'; const server=app.listen(port,host,()=>console.log(`Workout Tracker API http://${host}:${port}`));
-process.on('SIGTERM',()=>server.close(()=>db.close()));
+const expirationTimer = setInterval(() => {
+  try { finalizeSavedSessions(db); } catch (error) { console.error('Saved workout expiration failed', error); }
+}, 30000);
+expirationTimer.unref();
+process.on('SIGTERM',()=>{clearInterval(expirationTimer);server.close(()=>db.close())});
