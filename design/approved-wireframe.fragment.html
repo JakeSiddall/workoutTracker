@@ -1,0 +1,119 @@
+<div id="wt-wireframes" aria-label="Workout tracker mobile wireframes">
+  <div class="wt-phone">
+    <header class="wt-chrome"><span>Workout tracker</span><span class="wt-muted">Wireframe · sample data</span></header>
+    <main id="wt-screen"></main>
+    <nav class="wt-nav" aria-label="App navigation">
+      <button data-page="today">Today</button><button data-page="history">History</button><button data-page="settings">Settings</button>
+    </nav>
+  </div>
+</div>
+<style>
+#wt-wireframes { --wt-bg:light-dark(#ffffff,#202020); --wt-fg:light-dark(#222222,#eeeeee); --wt-soft:light-dark(#f2f2f2,#303030); --wt-line:light-dark(#b5b5b5,#666666); --wt-muted:light-dark(#626262,#bcbcbc); font-family:system-ui,sans-serif; color:var(--wt-fg); }
+#wt-wireframes * { box-sizing:border-box; }
+#wt-wireframes .wt-phone { width:100%;max-width:390px;margin:0 auto;background:var(--wt-bg);border:1px solid var(--wt-line);border-radius:16px;overflow:hidden; }
+#wt-wireframes .wt-chrome { display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;padding:16px;border-bottom:1px solid var(--wt-line); }
+#wt-wireframes .wt-muted { color:var(--wt-muted); }
+#wt-wireframes main { padding:20px 16px;min-height:470px; }
+#wt-wireframes h2 { margin:0 0 8px;font-size:24px;font-weight:500;line-height:1.2; }
+#wt-wireframes h3 { margin:0;font-size:18px;font-weight:500; }
+#wt-wireframes p { margin:6px 0 14px; }
+#wt-wireframes button,#wt-wireframes input,#wt-wireframes select { font:inherit;font-size:16px;min-height:44px;border:1px solid var(--wt-line);border-radius:5px;background:var(--wt-bg);color:var(--wt-fg);padding:9px 10px;max-width:100%; }
+#wt-wireframes button { cursor:pointer; }
+#wt-wireframes button:disabled { opacity:.5;cursor:default; }
+#wt-wireframes .wt-primary { background:var(--wt-fg);color:var(--wt-bg);border-color:var(--wt-fg); }
+#wt-wireframes .wt-full { width:100%;margin-top:14px; }
+#wt-wireframes .wt-plain { border:0;background:transparent;text-align:left;padding-left:0; }
+#wt-wireframes label { display:block;margin:12px 0 6px; }
+#wt-wireframes label input,#wt-wireframes label select { display:block;width:100%;margin-top:6px; }
+#wt-wireframes .wt-box { border:1px solid var(--wt-line);padding:14px;margin:16px 0;background:var(--wt-bg); }
+#wt-wireframes .wt-row { display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; }
+#wt-wireframes .wt-rule { border-bottom:1px solid var(--wt-line);padding:10px 0; }
+#wt-wireframes .wt-stack { display:grid;gap:8px;margin-top:14px; }
+#wt-wireframes .wt-stack button { text-align:left; }
+#wt-wireframes .wt-nav { display:flex;border-top:1px solid var(--wt-line);padding:6px;gap:4px; }
+#wt-wireframes .wt-nav button { flex:1;border:0;background:transparent; }
+#wt-wireframes .wt-nav button[aria-current="page"] { background:var(--wt-soft);font-weight:500; }
+#wt-wireframes .wt-fields { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+#wt-wireframes .wt-fields>* { min-width:0; }
+#wt-wireframes details { margin-top:12px; }
+#wt-wireframes summary { cursor:pointer;min-height:44px;padding:10px 0; }
+#wt-wireframes .wt-set { display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--wt-line); }
+#wt-wireframes .wt-current { background:var(--wt-soft);padding:14px;margin-top:12px; }
+#wt-wireframes .wt-status { margin:12px 0;color:var(--wt-muted); }
+#wt-wireframes .wt-count { text-align:center;font-size:42px;font-weight:500;padding:16px 0; }
+#wt-wireframes .wt-counter { display:grid;grid-template-columns:1fr 2fr;gap:12px; }
+#wt-wireframes .wt-timer { padding:12px 0;margin-top:12px;border-top:1px dashed var(--wt-line); }
+#wt-wireframes .wt-timer strong { font-size:24px;font-weight:500;font-variant-numeric:tabular-nums; }
+</style>
+<script>
+(() => {
+ const root=document.getElementById('wt-wireframes');
+ const screen=root.querySelector('#wt-screen');
+ const design={setView:'Focused set',showLast:true};
+ const state={page:'workout',template:'A',active:true,exercise:0,weight:145,done:[{key:'warm0',label:'Warm-up 1',weight:45,reps:8},{key:'warm1',label:'Warm-up 2',weight:70,reps:5},{key:'warm2',label:'Warm-up 3',weight:100,reps:3},{key:'warm3',label:'Warm-up 4',weight:125,reps:1}],reps:0,pullEntries:[],restEnd:null,message:'',pastSaved:false,planName:'Strength A',target:18};
+ const exercisesA=['Bench press','Romanian deadlift','Pull-ups','Knee / PT','Calf raise'];
+ const exercisesC=['Knee / PT','Trap-bar deadlift','Overhead press','Barbell row','Hip thrust','Push-ups'];
+ const exerciseList=()=>state.template==='A'?exercisesA:exercisesC;
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const button=(text,action,cls='')=>`<button type="button" class="${cls}" data-action="${action}">${text}</button>`;
+ const recency=text=>design.showLast?`<p class="wt-muted">${text}</p>`:'';
+ function rows(){ const ramps=[45,...[.5,.7,.85].map(p=>Math.ceil((state.weight*p)/5-.5)*5)].filter((v,i,a)=>v<state.weight&&a.indexOf(v)===i);const warm=state.done.filter(d=>d.key.startsWith('warm'));const pending=state.done.some(d=>d.key.startsWith('work'))?[]:ramps.map((w,i)=>({key:'warm'+i,label:'Warm-up '+(i+1),weight:w,reps:[8,5,3,1][i],range:['8–10','5','3','1–2'][i]})).filter(r=>!warm.some(d=>d.key===r.key)&&(!warm.length||r.weight>warm[warm.length-1].weight));return [...warm,...pending,...[1,2,3].map(i=>({key:'work'+i,label:'Work set '+i+' / 3',weight:state.weight,reps:5,range:'5–6'}))]; }
+ function restMarkup(){if(state.restEnd===null)return '';return `<div class="wt-timer"><div class="wt-row"><span>Suggested rest remaining</span><strong id="wt-clock"></strong></div><div class="wt-row">${button('+30 sec','extend')}</div></div>`;}
+ function tick(){const clock=screen.querySelector('#wt-clock');if(clock&&state.restEnd!==null){const seconds=Math.max(0,Math.ceil((state.restEnd-Date.now())/1000));clock.textContent=seconds?Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0'):'Ready when you are';}}
+ function startRest(seconds){state.restEnd=Date.now()+seconds*1000;}
+ function render(){
+  root.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-current',b.dataset.page===state.page?'page':'false'));
+  if(state.page==='today')screen.innerHTML=`<h2>Today</h2><p class="wt-muted">Next in your rotation: Strength A</p><label>Workout<select id="wt-template"><option value="A" ${state.template==='A'?'selected':''}>Strength A · recommended</option><option value="C" ${state.template==='C'?'selected':''}>Strength C</option></select></label>${recency('This workout · last completed '+(state.template==='A'?'8':'4')+' days ago')}<div class="wt-box">${exerciseList().map((n,i)=>`<div class="wt-rule">${i+1}. ${n}</div>`).join('')}</div>${button(state.active?'Resume workout':'Start workout','start','wt-primary wt-full')}${button('Log a past workout','past','wt-full')}`;
+  if(state.page==='workout')renderWorkout();
+  if(state.page==='history')screen.innerHTML=`<h2>History</h2>${button('Log a past workout','past','wt-full')}<div class="wt-stack">${state.pastSaved?'<div class="wt-box">Past workout added · mock entry</div>':''}${button('Sep 1 · Strength C<br><span class="wt-muted">5 exercises logged</span>','detail')}${button('Aug 28 · Strength A<br><span class="wt-muted">Bench 145 lb · 6, 6, 5 reps</span>','detail')}</div>`;
+  if(state.page==='detail')screen.innerHTML=`${button('‹ History','history','wt-plain')}<h2>Strength A</h2><p class="wt-muted">Aug 28 · sample workout</p><div class="wt-box"><h3>Bench press</h3><p>Target: 3 × 5–6 at 145 lb</p><div class="wt-rule">Work 1 · 145 lb × 6</div><div class="wt-rule">Work 2 · 145 lb × 6</div><div class="wt-rule">Work 3 · 145 lb × 5</div><details><summary>Warm-ups</summary><p>45 × 8 · 70 × 5 · 100 × 3</p></details></div><div class="wt-box"><h3>Pull-ups</h3><p>16 total reps · bodyweight</p></div>${button('Correct this workout','past','wt-full')}`;
+  if(state.page==='past')screen.innerHTML=`${button('‹ Back','history','wt-plain')}<h2>Log a past workout</h2><label>Performed on<input id="wt-date" type="date" value="2026-09-02"></label><label>Workout<select><option>Strength A</option><option>Strength C</option></select></label><div class="wt-box"><h3>Bench press</h3><p class="wt-muted">Enter only what you remember.</p><div class="wt-fields"><label>Actual weight · lb<input type="number" placeholder="Unknown"></label><label>Set 1 reps<input type="number" placeholder="Unknown"></label></div><div class="wt-fields"><label>Set 2 reps<input type="number" placeholder="Unknown"></label><label>Set 3 reps<input type="number" placeholder="Unknown"></label></div></div><label>Pull-ups · total reps<input type="number" placeholder="Unknown"></label><details><summary>Other exercises & notes</summary><label>Notes<input placeholder="What else did you do?"></label></details>${button('Save past workout','save-past','wt-primary wt-full')}`;
+  if(state.page==='settings')screen.innerHTML=`<h2>Settings</h2><p class="wt-muted">Current plan · A / C rotation</p><div class="wt-stack">${button(esc(state.planName)+'<br><span class="wt-muted">5 exercises · edit plan</span>','edit-plan')}${button('Strength C<br><span class="wt-muted">6 exercises · edit plan</span>','edit-c')}</div><div class="wt-box"><h3>Plan defaults</h3><label>Weight unit<select><option>Pounds (lb)</option><option>Kilograms (kg)</option></select></label><p class="wt-muted">Suggested weights can always be changed during a workout.</p></div>`;
+  if(state.page==='plan')screen.innerHTML=`${button('‹ Settings','settings','wt-plain')}<h2>Edit workout</h2><label>Name<input id="wt-plan-name" value="${esc(state.planName)}"></label><div class="wt-box"><h3>1. Bench press</h3><div class="wt-fields"><label>Work sets<input type="number" value="3"></label><label>Rest · seconds<input type="number" value="165"></label></div><div class="wt-fields"><label>Min reps<input type="number" value="5"></label><label>Max reps<input type="number" value="6"></label></div><label>Weight increment · lb<input type="number" value="5"></label></div><details><summary>Other exercises</summary><p>2. Romanian deadlift</p><p>3. Pull-ups · total reps</p><p>4. Knee / PT · duration</p><p>5. Calf raise</p></details>${button('Save plan changes','save-plan','wt-primary wt-full')}<p class="wt-status">Changes apply to future workouts.</p>`;
+  if(state.message)screen.insertAdjacentHTML('beforeend',`<p class="wt-status" role="status">${esc(state.message)}</p>`);
+  bind();tick();
+ }
+ function renderWorkout(){
+  const name=exerciseList()[state.exercise];
+  const isPull=name==='Pull-ups', isTimed=name==='Knee / PT';
+  screen.innerHTML=`<div class="wt-row">${button('‹ Today','today','wt-plain')}<span class="wt-muted">Strength ${state.template}</span></div><details><summary>Exercise ${state.exercise+1} of ${exerciseList().length} · workout order</summary><div class="wt-stack">${exerciseList().map((n,i)=>button(`${i+1}. ${n}`,'exercise-'+i)).join('')}</div></details><h2>${name}</h2>${recency('Last performed 8 days ago'+(isPull?' · 16 total reps':isTimed?'':' · sample history'))}`;
+  if(isPull){screen.innerHTML+=`<label>Total-rep target<input id="wt-target" type="number" min="1" value="${state.target}"></label><p class="wt-muted">Example target · bodyweight</p><div class="wt-count" aria-live="polite">${state.reps} <span class="wt-muted">/ ${state.target}</span></div>${state.reps>=state.target?'<p role="status">Target reached. Finish when you’re ready.</p>':''}${restMarkup()}<div class="wt-current"><label>Reps just completed<input id="wt-pull-reps" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 6" autocomplete="off"></label><button type="button" data-action="add-reps" class="wt-primary wt-full">Add reps</button></div>${state.pullEntries.length?`<p class="wt-muted">Last entry: ${state.pullEntries[state.pullEntries.length-1]} reps</p>${button('Undo last entry','undo-reps','wt-plain')}`:''}<details><summary>Correct total or add weight</summary><label>Actual total reps<input id="wt-total" type="number" min="0" value="${state.reps}"></label><label>Added weight · lb<input type="number" min="0" value="0"></label><p class="wt-muted">Rest: 1:30 · sample setting</p></details>${button(state.reps>=state.target?'Finish pull-ups':'Finish pull-ups · I’m done','next','wt-full')}`;return;}
+  if(isTimed){screen.innerHTML+=`<div class="wt-box"><h3>8–10 minutes</h3><p class="wt-muted">Follow your existing PT routine.</p><label>Actual minutes · optional<input type="number" placeholder="Not recorded"></label></div>${button('Mark done & continue','next','wt-primary wt-full')}${button('Skip exercise','next','wt-full')}`;return;}
+  const setRows=rows(), current=setRows.find(r=>!state.done.some(d=>d.key===r.key));
+  screen.innerHTML+=`<p>Target: 3 work sets × 5–6 reps</p><label>Weight for remaining sets · lb<input id="wt-weight" type="number" min="45" step="5" value="${state.weight}"></label><p class="wt-muted">Suggested 145 lb · logged sets stay unchanged</p><details ${design.setView==='All sets'?'open':''}><summary>Warm-ups & work sets · ${state.done.length} logged</summary>${setRows.map(r=>{const d=state.done.find(d=>d.key===r.key);return `<div class="wt-set"><span>${r.label}<br><span class="wt-muted">${d?d.weight:r.weight} lb × ${d?d.reps:r.range}</span></span><span>${d?'✓ Logged':current&&r.key===current.key?'Next':'—'}</span></div>`;}).join('')}</details>${restMarkup()}`;
+  if(current)screen.innerHTML+=`<div class="wt-current"><h3>${current.label}</h3><p>Target: ${current.weight} lb × ${current.range}</p><div class="wt-fields"><label>Actual lb<input id="wt-actual-weight" type="number" min="0" value="${current.weight}"></label><label>Actual reps<input id="wt-actual-reps" type="number" min="0" value="${current.reps}"></label></div><button type="button" data-action="log" class="wt-primary wt-full">Log set</button></div>`;
+  else screen.innerHTML+=button('Next exercise','next','wt-primary wt-full');
+  screen.innerHTML+=`<details><summary>Notes & effort · optional</summary><label>Reps left in reserve<select><option>Not recorded</option><option>0</option><option>1</option><option>2</option><option>3+</option></select></label><label>Notes<input placeholder="Anything to remember?"></label></details>${button('Skip to next exercise','next','wt-plain wt-full')}`;
+ }
+ function bind(){
+  const listen=(id,event,fn)=>{const el=screen.querySelector('#'+id);if(el)el.addEventListener(event,fn);};
+  listen('wt-template','change',e=>{state.template=e.target.value;state.active=false;render();});
+  listen('wt-weight','change',e=>{const v=Number(e.target.value);if(!Number.isFinite(v)||v<45||v%5!==0){state.message='Use a weight of at least 45 lb in 5 lb steps for this sketch.';}else{state.weight=v;state.message='Remaining targets updated; logged sets kept.';}render();});
+  listen('wt-target','change',e=>{state.target=Math.max(0,Number(e.target.value)||0);render();});
+  listen('wt-total','change',e=>{state.reps=Math.max(0,Math.floor(Number(e.target.value)||0));state.pullEntries=[];render();});
+ }
+ root.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  state.message='';
+  if(b.dataset.page){state.page=b.dataset.page;render();return;}
+  const a=b.dataset.action;if(!a)return;
+  if(['today','history','settings','past','detail'].includes(a))state.page=a;
+  if(a==='start'){state.page='workout';if(!state.active){state.exercise=0;state.done=[];}state.active=true;}
+  if(a.startsWith('exercise-')){state.exercise=Number(a.split('-')[1]);state.done=[];state.restEnd=null;}
+  if(a==='log'){const current=rows().find(r=>!state.done.some(d=>d.key===r.key));const wInput=screen.querySelector('#wt-actual-weight').value,rInput=screen.querySelector('#wt-actual-reps').value,w=Number(wInput),r=Number(rInput);if(current&&wInput!==''&&rInput!==''&&Number.isFinite(w)&&w>=0&&Number.isInteger(r)&&r>=0){state.done.push({...current,weight:w,reps:r});startRest(165);state.message='Set logged · rest started. Preview only.';}else state.message='Enter a weight and a whole number of reps.';}
+
+  if(a==='extend'&&state.restEnd!==null)state.restEnd=Math.max(Date.now(),state.restEnd)+30000;
+  if(a==='add-reps'){const raw=screen.querySelector('#wt-pull-reps').value.trim(),n=Number(raw);if(/^\d+$/.test(raw)&&Number.isSafeInteger(n)&&n>0){state.reps+=n;state.pullEntries.push(n);startRest(90);state.message=n+' reps added · rest started.';}else state.message='Enter the number of reps you just completed.';}
+  if(a==='undo-reps'&&state.pullEntries.length){state.reps-=state.pullEntries.pop();state.restEnd=null;}
+  if(a==='next'){state.exercise++;state.done=[];state.restEnd=null;if(state.exercise>=exerciseList().length){state.page='history';state.active=false;state.message='Workout finished · preview only.';}}
+  if(a==='save-past'){state.pastSaved=true;state.page='history';state.message='Preview only — no real workout saved.';}
+  if(a==='edit-plan'){state.page='plan';}
+  if(a==='edit-c'){state.message='This first sketch shows the Strength A editor.';}
+  if(a==='save-plan'){state.planName=screen.querySelector('#wt-plan-name').value||'Strength A';state.page='settings';state.message='Plan changes previewed — history stays unchanged.';}
+  render();
+ });
+ render();
+ const ticker=setInterval(()=>{if(!root.isConnected){clearInterval(ticker);return;}tick();},250);
+ if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addSelect(design,'setView',{label:'Set overview',options:['Focused set','All sets']});tweak.addToggle(design,'showLast',{label:'Show last-performed context'});}
+})();
+</script>

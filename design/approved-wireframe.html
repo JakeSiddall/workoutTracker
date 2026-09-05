@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Workout Wireframes V3</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Workout Wireframes V3" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; data-visualize-standalone&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Workout Wireframes V3&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled=&quot;true&quot;]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled=&quot;true&quot;] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;wt-wireframes&quot; aria-label=&quot;Workout tracker mobile wireframes&quot;&gt;
+  &lt;div class=&quot;wt-phone&quot;&gt;
+    &lt;header class=&quot;wt-chrome&quot;&gt;&lt;span&gt;Workout tracker&lt;/span&gt;&lt;span class=&quot;wt-muted&quot;&gt;Wireframe · sample data&lt;/span&gt;&lt;/header&gt;
+    &lt;main id=&quot;wt-screen&quot;&gt;&lt;/main&gt;
+    &lt;nav class=&quot;wt-nav&quot; aria-label=&quot;App navigation&quot;&gt;
+      &lt;button data-page=&quot;today&quot;&gt;Today&lt;/button&gt;&lt;button data-page=&quot;history&quot;&gt;History&lt;/button&gt;&lt;button data-page=&quot;settings&quot;&gt;Settings&lt;/button&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;style&gt;
+#wt-wireframes { --wt-bg:light-dark(#ffffff,#202020); --wt-fg:light-dark(#222222,#eeeeee); --wt-soft:light-dark(#f2f2f2,#303030); --wt-line:light-dark(#b5b5b5,#666666); --wt-muted:light-dark(#626262,#bcbcbc); font-family:system-ui,sans-serif; color:var(--wt-fg); }
+#wt-wireframes * { box-sizing:border-box; }
+#wt-wireframes .wt-phone { width:100%;max-width:390px;margin:0 auto;background:var(--wt-bg);border:1px solid var(--wt-line);border-radius:16px;overflow:hidden; }
+#wt-wireframes .wt-chrome { display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;padding:16px;border-bottom:1px solid var(--wt-line); }
+#wt-wireframes .wt-muted { color:var(--wt-muted); }
+#wt-wireframes main { padding:20px 16px;min-height:470px; }
+#wt-wireframes h2 { margin:0 0 8px;font-size:24px;font-weight:500;line-height:1.2; }
+#wt-wireframes h3 { margin:0;font-size:18px;font-weight:500; }
+#wt-wireframes p { margin:6px 0 14px; }
+#wt-wireframes button,#wt-wireframes input,#wt-wireframes select { font:inherit;font-size:16px;min-height:44px;border:1px solid var(--wt-line);border-radius:5px;background:var(--wt-bg);color:var(--wt-fg);padding:9px 10px;max-width:100%; }
+#wt-wireframes button { cursor:pointer; }
+#wt-wireframes button:disabled { opacity:.5;cursor:default; }
+#wt-wireframes .wt-primary { background:var(--wt-fg);color:var(--wt-bg);border-color:var(--wt-fg); }
+#wt-wireframes .wt-full { width:100%;margin-top:14px; }
+#wt-wireframes .wt-plain { border:0;background:transparent;text-align:left;padding-left:0; }
+#wt-wireframes label { display:block;margin:12px 0 6px; }
+#wt-wireframes label input,#wt-wireframes label select { display:block;width:100%;margin-top:6px; }
+#wt-wireframes .wt-box { border:1px solid var(--wt-line);padding:14px;margin:16px 0;background:var(--wt-bg); }
+#wt-wireframes .wt-row { display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; }
+#wt-wireframes .wt-rule { border-bottom:1px solid var(--wt-line);padding:10px 0; }
+#wt-wireframes .wt-stack { display:grid;gap:8px;margin-top:14px; }
+#wt-wireframes .wt-stack button { text-align:left; }
+#wt-wireframes .wt-nav { display:flex;border-top:1px solid var(--wt-line);padding:6px;gap:4px; }
+#wt-wireframes .wt-nav button { flex:1;border:0;background:transparent; }
+#wt-wireframes .wt-nav button[aria-current=&quot;page&quot;] { background:var(--wt-soft);font-weight:500; }
+#wt-wireframes .wt-fields { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+#wt-wireframes .wt-fields&gt;* { min-width:0; }
+#wt-wireframes details { margin-top:12px; }
+#wt-wireframes summary { cursor:pointer;min-height:44px;padding:10px 0; }
+#wt-wireframes .wt-set { display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--wt-line); }
+#wt-wireframes .wt-current { background:var(--wt-soft);padding:14px;margin-top:12px; }
+#wt-wireframes .wt-status { margin:12px 0;color:var(--wt-muted); }
+#wt-wireframes .wt-count { text-align:center;font-size:42px;font-weight:500;padding:16px 0; }
+#wt-wireframes .wt-counter { display:grid;grid-template-columns:1fr 2fr;gap:12px; }
+#wt-wireframes .wt-timer { padding:12px 0;margin-top:12px;border-top:1px dashed var(--wt-line); }
+#wt-wireframes .wt-timer strong { font-size:24px;font-weight:500;font-variant-numeric:tabular-nums; }
+&lt;/style&gt;
+&lt;script&gt;
+(() =&gt; {
+ const root=document.getElementById(&#x27;wt-wireframes&#x27;);
+ const screen=root.querySelector(&#x27;#wt-screen&#x27;);
+ const design={setView:&#x27;Focused set&#x27;,showLast:true};
+ const state={page:&#x27;workout&#x27;,template:&#x27;A&#x27;,active:true,exercise:0,weight:145,done:[{key:&#x27;warm0&#x27;,label:&#x27;Warm-up 1&#x27;,weight:45,reps:8},{key:&#x27;warm1&#x27;,label:&#x27;Warm-up 2&#x27;,weight:70,reps:5},{key:&#x27;warm2&#x27;,label:&#x27;Warm-up 3&#x27;,weight:100,reps:3},{key:&#x27;warm3&#x27;,label:&#x27;Warm-up 4&#x27;,weight:125,reps:1}],reps:0,pullEntries:[],restEnd:null,message:&#x27;&#x27;,pastSaved:false,planName:&#x27;Strength A&#x27;,target:18};
+ const exercisesA=[&#x27;Bench press&#x27;,&#x27;Romanian deadlift&#x27;,&#x27;Pull-ups&#x27;,&#x27;Knee / PT&#x27;,&#x27;Calf raise&#x27;];
+ const exercisesC=[&#x27;Knee / PT&#x27;,&#x27;Trap-bar deadlift&#x27;,&#x27;Overhead press&#x27;,&#x27;Barbell row&#x27;,&#x27;Hip thrust&#x27;,&#x27;Push-ups&#x27;];
+ const exerciseList=()=&gt;state.template===&#x27;A&#x27;?exercisesA:exercisesC;
+ const esc=s=&gt;String(s).replace(/[&amp;&lt;&gt;&quot;&#x27;]/g,c=&gt;({&#x27;&amp;&#x27;:&#x27;&amp;amp;&#x27;,&#x27;&lt;&#x27;:&#x27;&amp;lt;&#x27;,&#x27;&gt;&#x27;:&#x27;&amp;gt;&#x27;,&#x27;&quot;&#x27;:&#x27;&amp;quot;&#x27;,&quot;&#x27;&quot;:&#x27;&amp;#39;&#x27;}[c]));
+ const button=(text,action,cls=&#x27;&#x27;)=&gt;`&lt;button type=&quot;button&quot; class=&quot;${cls}&quot; data-action=&quot;${action}&quot;&gt;${text}&lt;/button&gt;`;
+ const recency=text=&gt;design.showLast?`&lt;p class=&quot;wt-muted&quot;&gt;${text}&lt;/p&gt;`:&#x27;&#x27;;
+ function rows(){ const ramps=[45,...[.5,.7,.85].map(p=&gt;Math.ceil((state.weight*p)/5-.5)*5)].filter((v,i,a)=&gt;v&lt;state.weight&amp;&amp;a.indexOf(v)===i);const warm=state.done.filter(d=&gt;d.key.startsWith(&#x27;warm&#x27;));const pending=state.done.some(d=&gt;d.key.startsWith(&#x27;work&#x27;))?[]:ramps.map((w,i)=&gt;({key:&#x27;warm&#x27;+i,label:&#x27;Warm-up &#x27;+(i+1),weight:w,reps:[8,5,3,1][i],range:[&#x27;8–10&#x27;,&#x27;5&#x27;,&#x27;3&#x27;,&#x27;1–2&#x27;][i]})).filter(r=&gt;!warm.some(d=&gt;d.key===r.key)&amp;&amp;(!warm.length||r.weight&gt;warm[warm.length-1].weight));return [...warm,...pending,...[1,2,3].map(i=&gt;({key:&#x27;work&#x27;+i,label:&#x27;Work set &#x27;+i+&#x27; / 3&#x27;,weight:state.weight,reps:5,range:&#x27;5–6&#x27;}))]; }
+ function restMarkup(){if(state.restEnd===null)return &#x27;&#x27;;return `&lt;div class=&quot;wt-timer&quot;&gt;&lt;div class=&quot;wt-row&quot;&gt;&lt;span&gt;Suggested rest remaining&lt;/span&gt;&lt;strong id=&quot;wt-clock&quot;&gt;&lt;/strong&gt;&lt;/div&gt;&lt;div class=&quot;wt-row&quot;&gt;${button(&#x27;+30 sec&#x27;,&#x27;extend&#x27;)}&lt;/div&gt;&lt;/div&gt;`;}
+ function tick(){const clock=screen.querySelector(&#x27;#wt-clock&#x27;);if(clock&amp;&amp;state.restEnd!==null){const seconds=Math.max(0,Math.ceil((state.restEnd-Date.now())/1000));clock.textContent=seconds?Math.floor(seconds/60)+&#x27;:&#x27;+String(seconds%60).padStart(2,&#x27;0&#x27;):&#x27;Ready when you are&#x27;;}}
+ function startRest(seconds){state.restEnd=Date.now()+seconds*1000;}
+ function render(){
+  root.querySelectorAll(&#x27;[data-page]&#x27;).forEach(b=&gt;b.setAttribute(&#x27;aria-current&#x27;,b.dataset.page===state.page?&#x27;page&#x27;:&#x27;false&#x27;));
+  if(state.page===&#x27;today&#x27;)screen.innerHTML=`&lt;h2&gt;Today&lt;/h2&gt;&lt;p class=&quot;wt-muted&quot;&gt;Next in your rotation: Strength A&lt;/p&gt;&lt;label&gt;Workout&lt;select id=&quot;wt-template&quot;&gt;&lt;option value=&quot;A&quot; ${state.template===&#x27;A&#x27;?&#x27;selected&#x27;:&#x27;&#x27;}&gt;Strength A · recommended&lt;/option&gt;&lt;option value=&quot;C&quot; ${state.template===&#x27;C&#x27;?&#x27;selected&#x27;:&#x27;&#x27;}&gt;Strength C&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;${recency(&#x27;This workout · last completed &#x27;+(state.template===&#x27;A&#x27;?&#x27;8&#x27;:&#x27;4&#x27;)+&#x27; days ago&#x27;)}&lt;div class=&quot;wt-box&quot;&gt;${exerciseList().map((n,i)=&gt;`&lt;div class=&quot;wt-rule&quot;&gt;${i+1}. ${n}&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;${button(state.active?&#x27;Resume workout&#x27;:&#x27;Start workout&#x27;,&#x27;start&#x27;,&#x27;wt-primary wt-full&#x27;)}${button(&#x27;Log a past workout&#x27;,&#x27;past&#x27;,&#x27;wt-full&#x27;)}`;
+  if(state.page===&#x27;workout&#x27;)renderWorkout();
+  if(state.page===&#x27;history&#x27;)screen.innerHTML=`&lt;h2&gt;History&lt;/h2&gt;${button(&#x27;Log a past workout&#x27;,&#x27;past&#x27;,&#x27;wt-full&#x27;)}&lt;div class=&quot;wt-stack&quot;&gt;${state.pastSaved?&#x27;&lt;div class=&quot;wt-box&quot;&gt;Past workout added · mock entry&lt;/div&gt;&#x27;:&#x27;&#x27;}${button(&#x27;Sep 1 · Strength C&lt;br&gt;&lt;span class=&quot;wt-muted&quot;&gt;5 exercises logged&lt;/span&gt;&#x27;,&#x27;detail&#x27;)}${button(&#x27;Aug 28 · Strength A&lt;br&gt;&lt;span class=&quot;wt-muted&quot;&gt;Bench 145 lb · 6, 6, 5 reps&lt;/span&gt;&#x27;,&#x27;detail&#x27;)}&lt;/div&gt;`;
+  if(state.page===&#x27;detail&#x27;)screen.innerHTML=`${button(&#x27;‹ History&#x27;,&#x27;history&#x27;,&#x27;wt-plain&#x27;)}&lt;h2&gt;Strength A&lt;/h2&gt;&lt;p class=&quot;wt-muted&quot;&gt;Aug 28 · sample workout&lt;/p&gt;&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;Bench press&lt;/h3&gt;&lt;p&gt;Target: 3 × 5–6 at 145 lb&lt;/p&gt;&lt;div class=&quot;wt-rule&quot;&gt;Work 1 · 145 lb × 6&lt;/div&gt;&lt;div class=&quot;wt-rule&quot;&gt;Work 2 · 145 lb × 6&lt;/div&gt;&lt;div class=&quot;wt-rule&quot;&gt;Work 3 · 145 lb × 5&lt;/div&gt;&lt;details&gt;&lt;summary&gt;Warm-ups&lt;/summary&gt;&lt;p&gt;45 × 8 · 70 × 5 · 100 × 3&lt;/p&gt;&lt;/details&gt;&lt;/div&gt;&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;Pull-ups&lt;/h3&gt;&lt;p&gt;16 total reps · bodyweight&lt;/p&gt;&lt;/div&gt;${button(&#x27;Correct this workout&#x27;,&#x27;past&#x27;,&#x27;wt-full&#x27;)}`;
+  if(state.page===&#x27;past&#x27;)screen.innerHTML=`${button(&#x27;‹ Back&#x27;,&#x27;history&#x27;,&#x27;wt-plain&#x27;)}&lt;h2&gt;Log a past workout&lt;/h2&gt;&lt;label&gt;Performed on&lt;input id=&quot;wt-date&quot; type=&quot;date&quot; value=&quot;2026-09-02&quot;&gt;&lt;/label&gt;&lt;label&gt;Workout&lt;select&gt;&lt;option&gt;Strength A&lt;/option&gt;&lt;option&gt;Strength C&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;Bench press&lt;/h3&gt;&lt;p class=&quot;wt-muted&quot;&gt;Enter only what you remember.&lt;/p&gt;&lt;div class=&quot;wt-fields&quot;&gt;&lt;label&gt;Actual weight · lb&lt;input type=&quot;number&quot; placeholder=&quot;Unknown&quot;&gt;&lt;/label&gt;&lt;label&gt;Set 1 reps&lt;input type=&quot;number&quot; placeholder=&quot;Unknown&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;div class=&quot;wt-fields&quot;&gt;&lt;label&gt;Set 2 reps&lt;input type=&quot;number&quot; placeholder=&quot;Unknown&quot;&gt;&lt;/label&gt;&lt;label&gt;Set 3 reps&lt;input type=&quot;number&quot; placeholder=&quot;Unknown&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;/div&gt;&lt;label&gt;Pull-ups · total reps&lt;input type=&quot;number&quot; placeholder=&quot;Unknown&quot;&gt;&lt;/label&gt;&lt;details&gt;&lt;summary&gt;Other exercises &amp; notes&lt;/summary&gt;&lt;label&gt;Notes&lt;input placeholder=&quot;What else did you do?&quot;&gt;&lt;/label&gt;&lt;/details&gt;${button(&#x27;Save past workout&#x27;,&#x27;save-past&#x27;,&#x27;wt-primary wt-full&#x27;)}`;
+  if(state.page===&#x27;settings&#x27;)screen.innerHTML=`&lt;h2&gt;Settings&lt;/h2&gt;&lt;p class=&quot;wt-muted&quot;&gt;Current plan · A / C rotation&lt;/p&gt;&lt;div class=&quot;wt-stack&quot;&gt;${button(esc(state.planName)+&#x27;&lt;br&gt;&lt;span class=&quot;wt-muted&quot;&gt;5 exercises · edit plan&lt;/span&gt;&#x27;,&#x27;edit-plan&#x27;)}${button(&#x27;Strength C&lt;br&gt;&lt;span class=&quot;wt-muted&quot;&gt;6 exercises · edit plan&lt;/span&gt;&#x27;,&#x27;edit-c&#x27;)}&lt;/div&gt;&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;Plan defaults&lt;/h3&gt;&lt;label&gt;Weight unit&lt;select&gt;&lt;option&gt;Pounds (lb)&lt;/option&gt;&lt;option&gt;Kilograms (kg)&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;p class=&quot;wt-muted&quot;&gt;Suggested weights can always be changed during a workout.&lt;/p&gt;&lt;/div&gt;`;
+  if(state.page===&#x27;plan&#x27;)screen.innerHTML=`${button(&#x27;‹ Settings&#x27;,&#x27;settings&#x27;,&#x27;wt-plain&#x27;)}&lt;h2&gt;Edit workout&lt;/h2&gt;&lt;label&gt;Name&lt;input id=&quot;wt-plan-name&quot; value=&quot;${esc(state.planName)}&quot;&gt;&lt;/label&gt;&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;1. Bench press&lt;/h3&gt;&lt;div class=&quot;wt-fields&quot;&gt;&lt;label&gt;Work sets&lt;input type=&quot;number&quot; value=&quot;3&quot;&gt;&lt;/label&gt;&lt;label&gt;Rest · seconds&lt;input type=&quot;number&quot; value=&quot;165&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;div class=&quot;wt-fields&quot;&gt;&lt;label&gt;Min reps&lt;input type=&quot;number&quot; value=&quot;5&quot;&gt;&lt;/label&gt;&lt;label&gt;Max reps&lt;input type=&quot;number&quot; value=&quot;6&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;label&gt;Weight increment · lb&lt;input type=&quot;number&quot; value=&quot;5&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;details&gt;&lt;summary&gt;Other exercises&lt;/summary&gt;&lt;p&gt;2. Romanian deadlift&lt;/p&gt;&lt;p&gt;3. Pull-ups · total reps&lt;/p&gt;&lt;p&gt;4. Knee / PT · duration&lt;/p&gt;&lt;p&gt;5. Calf raise&lt;/p&gt;&lt;/details&gt;${button(&#x27;Save plan changes&#x27;,&#x27;save-plan&#x27;,&#x27;wt-primary wt-full&#x27;)}&lt;p class=&quot;wt-status&quot;&gt;Changes apply to future workouts.&lt;/p&gt;`;
+  if(state.message)screen.insertAdjacentHTML(&#x27;beforeend&#x27;,`&lt;p class=&quot;wt-status&quot; role=&quot;status&quot;&gt;${esc(state.message)}&lt;/p&gt;`);
+  bind();tick();
+ }
+ function renderWorkout(){
+  const name=exerciseList()[state.exercise];
+  const isPull=name===&#x27;Pull-ups&#x27;, isTimed=name===&#x27;Knee / PT&#x27;;
+  screen.innerHTML=`&lt;div class=&quot;wt-row&quot;&gt;${button(&#x27;‹ Today&#x27;,&#x27;today&#x27;,&#x27;wt-plain&#x27;)}&lt;span class=&quot;wt-muted&quot;&gt;Strength ${state.template}&lt;/span&gt;&lt;/div&gt;&lt;details&gt;&lt;summary&gt;Exercise ${state.exercise+1} of ${exerciseList().length} · workout order&lt;/summary&gt;&lt;div class=&quot;wt-stack&quot;&gt;${exerciseList().map((n,i)=&gt;button(`${i+1}. ${n}`,&#x27;exercise-&#x27;+i)).join(&#x27;&#x27;)}&lt;/div&gt;&lt;/details&gt;&lt;h2&gt;${name}&lt;/h2&gt;${recency(&#x27;Last performed 8 days ago&#x27;+(isPull?&#x27; · 16 total reps&#x27;:isTimed?&#x27;&#x27;:&#x27; · sample history&#x27;))}`;
+  if(isPull){screen.innerHTML+=`&lt;label&gt;Total-rep target&lt;input id=&quot;wt-target&quot; type=&quot;number&quot; min=&quot;1&quot; value=&quot;${state.target}&quot;&gt;&lt;/label&gt;&lt;p class=&quot;wt-muted&quot;&gt;Example target · bodyweight&lt;/p&gt;&lt;div class=&quot;wt-count&quot; aria-live=&quot;polite&quot;&gt;${state.reps} &lt;span class=&quot;wt-muted&quot;&gt;/ ${state.target}&lt;/span&gt;&lt;/div&gt;${state.reps&gt;=state.target?&#x27;&lt;p role=&quot;status&quot;&gt;Target reached. Finish when you’re ready.&lt;/p&gt;&#x27;:&#x27;&#x27;}${restMarkup()}&lt;div class=&quot;wt-current&quot;&gt;&lt;label&gt;Reps just completed&lt;input id=&quot;wt-pull-reps&quot; type=&quot;text&quot; inputmode=&quot;numeric&quot; pattern=&quot;[0-9]*&quot; placeholder=&quot;e.g. 6&quot; autocomplete=&quot;off&quot;&gt;&lt;/label&gt;&lt;button type=&quot;button&quot; data-action=&quot;add-reps&quot; class=&quot;wt-primary wt-full&quot;&gt;Add reps&lt;/button&gt;&lt;/div&gt;${state.pullEntries.length?`&lt;p class=&quot;wt-muted&quot;&gt;Last entry: ${state.pullEntries[state.pullEntries.length-1]} reps&lt;/p&gt;${button(&#x27;Undo last entry&#x27;,&#x27;undo-reps&#x27;,&#x27;wt-plain&#x27;)}`:&#x27;&#x27;}&lt;details&gt;&lt;summary&gt;Correct total or add weight&lt;/summary&gt;&lt;label&gt;Actual total reps&lt;input id=&quot;wt-total&quot; type=&quot;number&quot; min=&quot;0&quot; value=&quot;${state.reps}&quot;&gt;&lt;/label&gt;&lt;label&gt;Added weight · lb&lt;input type=&quot;number&quot; min=&quot;0&quot; value=&quot;0&quot;&gt;&lt;/label&gt;&lt;p class=&quot;wt-muted&quot;&gt;Rest: 1:30 · sample setting&lt;/p&gt;&lt;/details&gt;${button(state.reps&gt;=state.target?&#x27;Finish pull-ups&#x27;:&#x27;Finish pull-ups · I’m done&#x27;,&#x27;next&#x27;,&#x27;wt-full&#x27;)}`;return;}
+  if(isTimed){screen.innerHTML+=`&lt;div class=&quot;wt-box&quot;&gt;&lt;h3&gt;8–10 minutes&lt;/h3&gt;&lt;p class=&quot;wt-muted&quot;&gt;Follow your existing PT routine.&lt;/p&gt;&lt;label&gt;Actual minutes · optional&lt;input type=&quot;number&quot; placeholder=&quot;Not recorded&quot;&gt;&lt;/label&gt;&lt;/div&gt;${button(&#x27;Mark done &amp; continue&#x27;,&#x27;next&#x27;,&#x27;wt-primary wt-full&#x27;)}${button(&#x27;Skip exercise&#x27;,&#x27;next&#x27;,&#x27;wt-full&#x27;)}`;return;}
+  const setRows=rows(), current=setRows.find(r=&gt;!state.done.some(d=&gt;d.key===r.key));
+  screen.innerHTML+=`&lt;p&gt;Target: 3 work sets × 5–6 reps&lt;/p&gt;&lt;label&gt;Weight for remaining sets · lb&lt;input id=&quot;wt-weight&quot; type=&quot;number&quot; min=&quot;45&quot; step=&quot;5&quot; value=&quot;${state.weight}&quot;&gt;&lt;/label&gt;&lt;p class=&quot;wt-muted&quot;&gt;Suggested 145 lb · logged sets stay unchanged&lt;/p&gt;&lt;details ${design.setView===&#x27;All sets&#x27;?&#x27;open&#x27;:&#x27;&#x27;}&gt;&lt;summary&gt;Warm-ups &amp; work sets · ${state.done.length} logged&lt;/summary&gt;${setRows.map(r=&gt;{const d=state.done.find(d=&gt;d.key===r.key);return `&lt;div class=&quot;wt-set&quot;&gt;&lt;span&gt;${r.label}&lt;br&gt;&lt;span class=&quot;wt-muted&quot;&gt;${d?d.weight:r.weight} lb × ${d?d.reps:r.range}&lt;/span&gt;&lt;/span&gt;&lt;span&gt;${d?&#x27;✓ Logged&#x27;:current&amp;&amp;r.key===current.key?&#x27;Next&#x27;:&#x27;—&#x27;}&lt;/span&gt;&lt;/div&gt;`;}).join(&#x27;&#x27;)}&lt;/details&gt;${restMarkup()}`;
+  if(current)screen.innerHTML+=`&lt;div class=&quot;wt-current&quot;&gt;&lt;h3&gt;${current.label}&lt;/h3&gt;&lt;p&gt;Target: ${current.weight} lb × ${current.range}&lt;/p&gt;&lt;div class=&quot;wt-fields&quot;&gt;&lt;label&gt;Actual lb&lt;input id=&quot;wt-actual-weight&quot; type=&quot;number&quot; min=&quot;0&quot; value=&quot;${current.weight}&quot;&gt;&lt;/label&gt;&lt;label&gt;Actual reps&lt;input id=&quot;wt-actual-reps&quot; type=&quot;number&quot; min=&quot;0&quot; value=&quot;${current.reps}&quot;&gt;&lt;/label&gt;&lt;/div&gt;&lt;button type=&quot;button&quot; data-action=&quot;log&quot; class=&quot;wt-primary wt-full&quot;&gt;Log set&lt;/button&gt;&lt;/div&gt;`;
+  else screen.innerHTML+=button(&#x27;Next exercise&#x27;,&#x27;next&#x27;,&#x27;wt-primary wt-full&#x27;);
+  screen.innerHTML+=`&lt;details&gt;&lt;summary&gt;Notes &amp; effort · optional&lt;/summary&gt;&lt;label&gt;Reps left in reserve&lt;select&gt;&lt;option&gt;Not recorded&lt;/option&gt;&lt;option&gt;0&lt;/option&gt;&lt;option&gt;1&lt;/option&gt;&lt;option&gt;2&lt;/option&gt;&lt;option&gt;3+&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Notes&lt;input placeholder=&quot;Anything to remember?&quot;&gt;&lt;/label&gt;&lt;/details&gt;${button(&#x27;Skip to next exercise&#x27;,&#x27;next&#x27;,&#x27;wt-plain wt-full&#x27;)}`;
+ }
+ function bind(){
+  const listen=(id,event,fn)=&gt;{const el=screen.querySelector(&#x27;#&#x27;+id);if(el)el.addEventListener(event,fn);};
+  listen(&#x27;wt-template&#x27;,&#x27;change&#x27;,e=&gt;{state.template=e.target.value;state.active=false;render();});
+  listen(&#x27;wt-weight&#x27;,&#x27;change&#x27;,e=&gt;{const v=Number(e.target.value);if(!Number.isFinite(v)||v&lt;45||v%5!==0){state.message=&#x27;Use a weight of at least 45 lb in 5 lb steps for this sketch.&#x27;;}else{state.weight=v;state.message=&#x27;Remaining targets updated; logged sets kept.&#x27;;}render();});
+  listen(&#x27;wt-target&#x27;,&#x27;change&#x27;,e=&gt;{state.target=Math.max(0,Number(e.target.value)||0);render();});
+  listen(&#x27;wt-total&#x27;,&#x27;change&#x27;,e=&gt;{state.reps=Math.max(0,Math.floor(Number(e.target.value)||0));state.pullEntries=[];render();});
+ }
+ root.addEventListener(&#x27;click&#x27;,e=&gt;{
+  const b=e.target.closest(&#x27;button&#x27;);if(!b)return;
+  state.message=&#x27;&#x27;;
+  if(b.dataset.page){state.page=b.dataset.page;render();return;}
+  const a=b.dataset.action;if(!a)return;
+  if([&#x27;today&#x27;,&#x27;history&#x27;,&#x27;settings&#x27;,&#x27;past&#x27;,&#x27;detail&#x27;].includes(a))state.page=a;
+  if(a===&#x27;start&#x27;){state.page=&#x27;workout&#x27;;if(!state.active){state.exercise=0;state.done=[];}state.active=true;}
+  if(a.startsWith(&#x27;exercise-&#x27;)){state.exercise=Number(a.split(&#x27;-&#x27;)[1]);state.done=[];state.restEnd=null;}
+  if(a===&#x27;log&#x27;){const current=rows().find(r=&gt;!state.done.some(d=&gt;d.key===r.key));const wInput=screen.querySelector(&#x27;#wt-actual-weight&#x27;).value,rInput=screen.querySelector(&#x27;#wt-actual-reps&#x27;).value,w=Number(wInput),r=Number(rInput);if(current&amp;&amp;wInput!==&#x27;&#x27;&amp;&amp;rInput!==&#x27;&#x27;&amp;&amp;Number.isFinite(w)&amp;&amp;w&gt;=0&amp;&amp;Number.isInteger(r)&amp;&amp;r&gt;=0){state.done.push({...current,weight:w,reps:r});startRest(165);state.message=&#x27;Set logged · rest started. Preview only.&#x27;;}else state.message=&#x27;Enter a weight and a whole number of reps.&#x27;;}
+
+  if(a===&#x27;extend&#x27;&amp;&amp;state.restEnd!==null)state.restEnd=Math.max(Date.now(),state.restEnd)+30000;
+  if(a===&#x27;add-reps&#x27;){const raw=screen.querySelector(&#x27;#wt-pull-reps&#x27;).value.trim(),n=Number(raw);if(/^\d+$/.test(raw)&amp;&amp;Number.isSafeInteger(n)&amp;&amp;n&gt;0){state.reps+=n;state.pullEntries.push(n);startRest(90);state.message=n+&#x27; reps added · rest started.&#x27;;}else state.message=&#x27;Enter the number of reps you just completed.&#x27;;}
+  if(a===&#x27;undo-reps&#x27;&amp;&amp;state.pullEntries.length){state.reps-=state.pullEntries.pop();state.restEnd=null;}
+  if(a===&#x27;next&#x27;){state.exercise++;state.done=[];state.restEnd=null;if(state.exercise&gt;=exerciseList().length){state.page=&#x27;history&#x27;;state.active=false;state.message=&#x27;Workout finished · preview only.&#x27;;}}
+  if(a===&#x27;save-past&#x27;){state.pastSaved=true;state.page=&#x27;history&#x27;;state.message=&#x27;Preview only — no real workout saved.&#x27;;}
+  if(a===&#x27;edit-plan&#x27;){state.page=&#x27;plan&#x27;;}
+  if(a===&#x27;edit-c&#x27;){state.message=&#x27;This first sketch shows the Strength A editor.&#x27;;}
+  if(a===&#x27;save-plan&#x27;){state.planName=screen.querySelector(&#x27;#wt-plan-name&#x27;).value||&#x27;Strength A&#x27;;state.page=&#x27;settings&#x27;;state.message=&#x27;Plan changes previewed — history stays unchanged.&#x27;;}
+  render();
+ });
+ render();
+ const ticker=setInterval(()=&gt;{if(!root.isConnected){clearInterval(ticker);return;}tick();},250);
+ if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addSelect(design,&#x27;setView&#x27;,{label:&#x27;Set overview&#x27;,options:[&#x27;Focused set&#x27;,&#x27;All sets&#x27;]});tweak.addToggle(design,&#x27;showLast&#x27;,{label:&#x27;Show last-performed context&#x27;});}
+})();
+&lt;/script&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-tabs&quot;&gt;
+(() =&gt; {
+  const selector = &#x27;.nav[role=&quot;tablist&quot;] [role=&quot;tab&quot;]&#x27;;
+  const disabled = &#x27;:disabled,[aria-disabled=&quot;true&quot;]&#x27;;
+  const selectTab = (selected) =&gt; {
+    const panelId = selected.getAttribute(&quot;aria-controls&quot;);
+    for (const tab of selected.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)) {
+      const active = tab === selected;
+      tab.classList.toggle(&quot;active&quot;, active);
+      tab.setAttribute(&quot;aria-selected&quot;, String(active));
+      const id = tab.getAttribute(&quot;aria-controls&quot;);
+      const panel = id &amp;&amp; document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden &amp;&amp; selected.id) {
+          panel.setAttribute(&quot;aria-labelledby&quot;, selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) =&gt; {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === &quot;click&quot;) {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;),
+    ).filter((candidate) =&gt; !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === &quot;ArrowRight&quot; || event.key === &quot;ArrowDown&quot;) {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === &quot;ArrowLeft&quot; || event.key === &quot;ArrowUp&quot;) {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === &quot;Home&quot;) {
+      next = 0;
+    } else if (event.key === &quot;End&quot;) {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll(&#x27;.nav[role=&quot;tablist&quot;]&#x27;)) {
+    const selected =
+      list.querySelector(&#x27;[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;].active&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;]&#x27;);
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener(&quot;click&quot;, interact);
+  document.addEventListener(&quot;keydown&quot;, interact);
+  window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+    document.removeEventListener(&quot;click&quot;, interact);
+    document.removeEventListener(&quot;keydown&quot;, interact);
+  }, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

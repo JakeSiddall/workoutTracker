@@ -1,0 +1,26 @@
+{
+  "synthetic": true,
+  "purpose": "Integration tests only; not Jake's training history or final API schema",
+  "sessions": [
+    {
+      "id": "synthetic-session-1",
+      "performed_date": "2026-08-01",
+      "time_precision": "date",
+      "exercises": [{"exercise_id": "synthetic-bench", "name": "Bench press", "tracking_mode": "sets", "unit": "lb", "load_basis": "external_total", "sets": [
+        {"kind": "warmup", "target_load": 45, "target_rep_min": 8, "target_rep_max": 10, "actual_load": 45, "actual_reps": 8, "status": "completed"},
+        {"kind": "work", "target_load": 100, "target_rep_min": 5, "target_rep_max": 6, "actual_load": 100, "actual_reps": 5, "status": "completed"}
+      ]}]
+    },
+    {
+      "id": "synthetic-session-2",
+      "performed_date": "2026-08-08",
+      "time_precision": "date",
+      "exercises": [
+        {"exercise_id": "synthetic-bench", "name": "Bench press", "tracking_mode": "sets", "unit": "lb", "load_basis": "external_total", "sets": [
+          {"kind": "work", "target_load": 105, "target_rep_min": 5, "target_rep_max": 6, "actual_load": 105, "actual_reps": 5, "status": "completed"}
+        ]},
+        {"exercise_id": "synthetic-pullups", "name": "Pull-ups", "tracking_mode": "total_reps", "unit": "lb", "load_basis": "added_bodyweight", "target_total_reps": null, "actual_total_reps": 12, "actual_added_load": 0, "set_count": null, "status": "completed"}
+      ]
+    }
+  ]
+}
