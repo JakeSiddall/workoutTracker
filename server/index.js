@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { openDatabase,getToday,createSession,getSession,setTarget,logSet,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet,cancelSession,saveSessionForLater,resumeSession,finalizeSavedSessions } from './db.js';
+import { openDatabase,getToday,createSession,getSession,setTarget,updateWarmupSettings,logSet,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet,cancelSession,saveSessionForLater,resumeSession,finalizeSavedSessions } from './db.js';
 
 const app=express(); const db=openDatabase();
 app.use((req,res,next)=>{
@@ -30,6 +30,7 @@ app.get('/api/today',(_req,res)=>res.json(getToday(db)));
 app.post('/api/sessions',asyncRoute((req,res)=>res.status(201).json(createSession(db,req.body))));
 app.get('/api/sessions/:id',(req,res)=>{const x=getSession(db,req.params.id);x?res.json(x):res.status(404).json({error:'Session not found'})});
 app.patch('/api/sessions/:id/exercises/:exerciseId/target',asyncRoute((req,res)=>res.json(setTarget(db,req.params.id,req.params.exerciseId,req.body))));
+app.patch('/api/sessions/:id/exercises/:exerciseId/warmup-settings',asyncRoute((req,res)=>res.json(updateWarmupSettings(db,req.params.id,req.params.exerciseId,req.body))));
 app.post('/api/sessions/:id/sets/:setId/log',asyncRoute((req,res)=>res.json(logSet(db,req.params.id,req.params.setId,req.body))));
 app.post('/api/sessions/:id/sets/:setId/skip',asyncRoute((req,res)=>res.json(skipSet(db,req.params.id,req.params.setId,req.body))));
 app.post('/api/sessions/:id/exercises/:exerciseId/reps',asyncRoute((req,res)=>res.json(addReps(db,req.params.id,req.params.exerciseId,req.body))));

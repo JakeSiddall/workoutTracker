@@ -27,7 +27,7 @@ test('server readiness and browser mutation boundary', async () => {
     }
     assert.ok(ready, 'server becomes ready');
     assert.deepEqual(await (await fetch(`${base}/api/health`)).json(), {ok:true,database:true});
-    const create = (headers) => fetch(`${base}/api/sessions`, {method:'POST', headers, body:JSON.stringify({requestId:'http-test',templateId:'strength-a',performedDate:'2026-09-05',timezone:'America/Los_Angeles'})});
+    const create = (headers) => fetch(`${base}/api/sessions`, {method:'POST', headers, body:JSON.stringify({requestId:'http-test',templateId:'strength-c',performedDate:'2026-09-05',timezone:'America/Los_Angeles'})});
     assert.equal((await create({'content-type':'application/json',origin:'https://untrusted.example'})).status,403);
     assert.equal((await create({'content-type':'text/plain',origin:'https://lift.jakesiddall.com'})).status,415);
     assert.equal((await create({'content-type':'application/json',origin:'https://lift.jakesiddall.com','sec-fetch-site':'cross-site'})).status,403);
@@ -35,6 +35,16 @@ test('server readiness and browser mutation boundary', async () => {
     const created=await create(headers);
     assert.equal(created.status,201);
     let session=await created.json();
+    const trap=session.exercises.find((exercise)=>exercise.exercise_id==='trapbar');
+    const settingsResponse=await fetch(`${base}/api/sessions/${session.id}/exercises/${trap.id}/warmup-settings`,{
+      method:'PATCH',
+      headers:{'content-type':'application/json',origin:'https://lift.jakesiddall.com'},
+      body:JSON.stringify({requestId:'http-settings',revision:session.revision,barWeight:52,equipmentMinimum:72,loadStep:10,warmupEnabled:true,optionalFinalRamp:true})
+    });
+    assert.equal(settingsResponse.status,200);
+    const updated=await settingsResponse.json();
+    session=updated;
+    assert.deepEqual(updated.exercises.find((exercise)=>exercise.id===trap.id).prescription.barWeight,52);
     // Use today's date in the stored timezone so this HTTP test is calendar-independent.
     const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
     const cancelBody={requestId:'http-cancel',revision:session.revision};

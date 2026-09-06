@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS exercises (
   tracking_mode TEXT NOT NULL CHECK (tracking_mode IN ('sets','total_reps','duration')),
   load_basis TEXT NOT NULL CHECK (load_basis IN ('external_total','per_hand','added_bodyweight','none')),
   unit TEXT,
+  bar_weight REAL,
   equipment_min REAL,
   load_step REAL,
   warmup_default INTEGER NOT NULL DEFAULT 0 CHECK (warmup_default IN (0,1)),
