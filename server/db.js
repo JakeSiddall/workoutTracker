@@ -95,26 +95,28 @@ function migrateSeedDefaults(db) {
     AND bar_weight IS NULL AND equipment_min=45`).run();
   const legacy = db.prepare(`SELECT id FROM exercises WHERE id='trapbar' AND name='Trap-bar deadlift'
     AND bar_weight IS NULL AND equipment_min IS NULL AND load_step=10 AND warmup_default=0 AND optional_final_ramp=0`).get();
-  if (!legacy) return;
+  if (!legacy) return false;
   db.transaction(() => {
     db.prepare(`UPDATE exercises SET name='Trap-bar squat',bar_weight=52,equipment_min=72,load_step=10,
       warmup_default=1,optional_final_ramp=1 WHERE id='trapbar'`).run();
     db.prepare(`UPDATE template_exercises SET warmup_enabled=1,optional_final_ramp=1
-      WHERE exercise_id='trapbar' AND warmup_enabled=0 AND optional_final_ramp=0`).run();
+      WHERE id='c-trap' AND exercise_id='trapbar' AND warmup_enabled=0 AND optional_final_ramp=0`).run();
   })();
+  return true;
 }
 
 function migrateUnstartedTrapBarSnapshots(db) {
   const rows = db.prepare(`SELECT se.* FROM session_exercises se JOIN sessions s ON s.id=se.session_id
-    WHERE s.status='in_progress' AND se.exercise_id='trapbar'`).all();
+    WHERE s.status='in_progress' AND se.exercise_id='trapbar' AND se.status='pending'`).all();
   for (const row of rows) {
     const resolved = db.prepare("SELECT 1 FROM sets WHERE session_exercise_id=? AND status!='pending'").get(row.id);
     if (resolved) continue;
     const prescription = JSON.parse(row.prescription_snapshot);
-    if (prescription.equipmentMin != null || prescription.warmupEnabled) continue;
+    if (row.name_snapshot !== 'Trap-bar deadlift' || prescription.barWeight != null || prescription.equipmentMin != null || prescription.loadStep !== 10 || prescription.warmupEnabled !== false || prescription.optionalFinalRamp !== false) continue;
     Object.assign(prescription, {barWeight:52,equipmentMin:72,loadStep:10,warmupEnabled:true,optionalFinalRamp:true});
     db.prepare('UPDATE session_exercises SET prescription_snapshot=? WHERE id=?').run(json(prescription),row.id);
     rebuildPendingSets(db,row.id,prescription,row.chosen_target_load);
+    db.prepare('UPDATE sessions SET revision=revision+1,updated_at=? WHERE id=?').run(now(),row.session_id);
   }
 }
 
