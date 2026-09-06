@@ -120,7 +120,7 @@ Examples: 145 lb bench, eligible with a 5 lb increment and a 6-day gap → 150 s
 
 ## 5. Warm-ups and overrides
 
-Reuse the existing tracker workbook's approximate ramp: equipment minimum × 8–10, 50% of chosen work weight × 5, 70% × 3, optional 85% × 1–2. This is inherited programming, not a newly validated universal formula. Bench/OHP/RDL can default to a 45 lb bar and 5 lb step, visibly editable; floor pulls need a confirmed practical starting load/bar configuration.
+Reuse the existing tracker workbook's approximate ramp: equipment minimum × 8–10, 50% of chosen work weight × 5, 70% × 3, optional 85% × 1–2. This is inherited programming, not a newly validated universal formula. Bench/OHP/RDL can default to a 45 lb bar and 5 lb step, visibly editable. Jake's trap bar is 52 lb and its lightest practical total is 72 lb; these are editable persisted settings, alongside the practical total-load increment, warm-up toggle, and optional final ramp. Keep these fields in a collapsed section during normal workout use.
 
 - Round percentage loads to the nearest equipment step relative to the configured minimum; tie goes down. Clamp to the minimum, then discard duplicate loads and any ramp at/above the chosen work weight. Do not discard the selected work set itself.
 - Warm-ups reference the current chosen target, not the algorithm's suggestion. A set's independently edited actual weight records what happened; it does not silently revise the remaining targets.
@@ -129,6 +129,8 @@ Reuse the existing tracker workbook's approximate ramp: equipment minimum × 8�
 - Warm-ups can be skipped or their actuals corrected. They never count toward work progression or reported work-set volume.
 - Bench at 145 with minimum 45, step 5, optional ramp on: 45 × 8–10; 70 × 5; 100 × 3; 125 × 1–2. At a chosen 135: 45; 65; 95; 115 with the same rep prescriptions.
 - No automatic weighted ramp for total-reps bodyweight exercises or timed PT. Accessories default to warm-up off; simple ramp can be enabled when equipment is defined.
+- Loaded compound exercises with confirmed equipment settings default to warm-ups on. Pull-ups and calf raises remain off by default. This is an editable app default, not a claim that those movements never need preparation.
+- The canonical trap-bar exercise is named “Trap-bar squat” for future sessions. Existing session name and prescription snapshots remain unchanged history. An unstarted active trap-bar prescription may adopt newly confirmed equipment defaults so the original omission can be corrected before work begins.
 
 ## 6. Data model: six core tables
 
