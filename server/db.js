@@ -1,3 +1,4 @@
+import { prospectiveRoutine } from './ac-routines.js';
 import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,6 +16,8 @@ const instant = db => (clocks.get(db) || (() => new Date()))();
 export const finalizeSavedSessions = db => expireSavedSessions(db, instant(db));
 
 const exerciseSeed = [
+  ['wall','Wall squat','duration','none',null,null,null,null,0,0],
+  ['goblet','Goblet squat','sets','external_total','lb',null,null,null,0,0],
   ['bench','Bench press','sets','external_total','lb',45,45,5,1,1],
   ['rdl','Romanian deadlift','sets','external_total','lb',45,45,5,1,1],
   ['pullups','Pull-ups','total_reps','added_bodyweight','lb',null,0,5,0,0],
@@ -68,6 +71,10 @@ export function openDatabase(filename = process.env.WORKOUT_DB || path.join(proc
 }
 
 function migrateSchema(db) {
+  for (const name of ['target_duration_seconds', 'actual_duration_seconds']) {
+    if (!db.prepare('PRAGMA table_info(sets)').all().some(c => c.name === name))
+      db.exec(`ALTER TABLE sets ADD COLUMN ${name} INTEGER`);
+  }
   const columns = db.prepare("PRAGMA table_info('exercises')").all();
   if (!columns.some((column) => column.name === 'bar_weight')) db.exec('ALTER TABLE exercises ADD COLUMN bar_weight REAL');
 }
@@ -122,10 +129,8 @@ function migrateUnstartedTrapBarSnapshots(db) {
 
 export function getToday(db) {
   finalizeSavedSessions(db);
-  const templates = db.prepare(`SELECT t.*, GROUP_CONCAT(e.name, '||') exercise_names
-    FROM workout_templates t JOIN template_exercises te ON te.template_id=t.id
-    JOIN exercises e ON e.id=te.exercise_id WHERE t.active=1 AND t.archived=0
-    GROUP BY t.id ORDER BY t.sort_order`).all().map((t) => ({...t, exercises: t.exercise_names.split('||')}));
+  const templates = db.prepare('SELECT * FROM workout_templates WHERE active=1 AND archived=0 ORDER BY sort_order').all()
+    .map(t => ({...t, exercises:routineRows(db,t.id).map(e => e.name)}));
   const last = db.prepare(`SELECT template_id FROM sessions WHERE status='completed' AND template_id IS NOT NULL
     ORDER BY COALESCE(performed_at_utc, performed_local_date) DESC, created_at DESC LIMIT 1`).get();
   const active = db.prepare(`SELECT id FROM sessions WHERE status='in_progress'`).get();
@@ -133,11 +138,17 @@ export function getToday(db) {
   return { templates, recommendedTemplateId: templates[(idx + 1) % templates.length]?.id, activeSessionId: active?.id ?? null };
 }
 
+function routineRows(db, templateId) {
+  const rows = db.prepare(`SELECT te.*, e.name, e.tracking_mode, e.load_basis, e.unit, e.bar_weight, e.equipment_min, e.load_step
+    FROM template_exercises te JOIN exercises e ON e.id=te.exercise_id WHERE te.template_id=? ORDER BY te.sort_order`).all(templateId);
+  return prospectiveRoutine(rows, templateId, Object.fromEntries(
+    db.prepare("SELECT * FROM exercises WHERE id IN ('wall','goblet')").all().map(e => [e.id,e])));
+}
+
 function snapshotSession(db, templateId, body) {
   const template = db.prepare('SELECT * FROM workout_templates WHERE id=? AND active=1').get(templateId);
   if (!template) throw Object.assign(new Error('Unknown active template'), { status: 400 });
-  const rows = db.prepare(`SELECT te.*, e.name, e.tracking_mode, e.load_basis, e.unit, e.bar_weight, e.equipment_min, e.load_step
-    FROM template_exercises te JOIN exercises e ON e.id=te.exercise_id WHERE te.template_id=? ORDER BY te.sort_order`).all(templateId);
+  const rows = routineRows(db, templateId);
   const sessionId = uid('session');
   const stamp = now();
   db.prepare(`INSERT INTO sessions(id,template_id,template_name_snapshot,performed_local_date,performed_at_utc,timezone,time_precision,actual_started_at,status,entry_source,created_at,updated_at)
@@ -145,10 +156,10 @@ function snapshotSession(db, templateId, body) {
   for (const row of rows) {
     const sxId = uid('exercise');
     const suggested = row.id === 'a-bench' ? 145 : null;
-    const prescription = {workSetCount:row.work_set_count,repMin:row.rep_min,repMax:row.rep_max,totalRepTarget:row.total_rep_target,durationMinSeconds:row.duration_min_seconds,durationMaxSeconds:row.duration_max_seconds,restSeconds:row.rest_seconds,barWeight:row.bar_weight,equipmentMin:row.equipment_min,loadStep:row.load_step,warmupEnabled:Boolean(row.warmup_enabled),optionalFinalRamp:Boolean(row.optional_final_ramp)};
+    const prescription = {workSetCount:row.work_set_count,repMin:row.rep_min,repMax:row.rep_max,totalRepTarget:row.total_rep_target,durationMinSeconds:row.duration_min_seconds,durationMaxSeconds:row.duration_max_seconds,restSeconds:row.rest_seconds,barWeight:row.bar_weight,equipmentMin:row.equipment_min,loadStep:row.load_step,warmupEnabled:Boolean(row.warmup_enabled),optionalFinalRamp:Boolean(row.optional_final_ramp), optional:row.exercise_id==='pushups'};
     db.prepare(`INSERT INTO session_exercises(id,session_id,exercise_id,prescribed_exercise_id,sort_order,name_snapshot,tracking_mode_snapshot,load_basis_snapshot,unit_snapshot,prescription_snapshot,suggestion_load,suggestion_reason,suggestion_policy_version,chosen_target_load,target_total_reps)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(sxId, sessionId, row.exercise_id, row.exercise_id, row.sort_order, row.name, row.tracking_mode, row.load_basis, row.unit, json(prescription), suggested, suggested ? 'Historical observation; confirm or override' : 'Choose a starting load', 'v1', suggested, row.total_rep_target);
-    if (row.tracking_mode === 'sets') createSets(db, sxId, prescription, suggested);
+    if (row.tracking_mode === 'sets' || row.exercise_id === 'wall') createSets(db, sxId, prescription, suggested);
   }
   return sessionId;
 }
@@ -165,6 +176,7 @@ function createSets(db, sxId, p, load) {
     db.prepare(`INSERT INTO sets(id,session_exercise_id,sort_order,kind,prescribed_set_ordinal,target_load,target_rep_min,target_rep_max,status) VALUES (?,?,?,?,?,?,?,?,'pending')`)
       .run(uid('set'), sxId, order++, 'work', i, load, p.repMin, p.repMax);
   }
+  if (p.durationMinSeconds != null) db.prepare('UPDATE sets SET target_duration_seconds=? WHERE session_exercise_id=?').run(p.durationMinSeconds,sxId);
 }
 
 function rebuildPendingSets(db, sxId, p, chosenWorkLoad) {
@@ -266,6 +278,7 @@ export function setTarget(db, sessionId, sxId, body) {
   requireNumber(body.chosenTargetLoad, 'chosenTargetLoad');
   return mutate(db,sessionId,body,() => {
     const sx=db.prepare('SELECT * FROM session_exercises WHERE id=? AND session_id=?').get(sxId,sessionId); if(!sx) throw Object.assign(new Error('Exercise not found'),{status:404});
+    if(sx.tracking_mode_snapshot!=='sets') throw Object.assign(new Error('Load targets require a set exercise'),{status:400});
     const p=JSON.parse(sx.prescription_snapshot);
     db.prepare('UPDATE session_exercises SET chosen_target_load=? WHERE id=?').run(body.chosenTargetLoad,sxId);
     db.prepare("UPDATE sets SET target_load=? WHERE session_exercise_id=? AND kind='work' AND status='pending'").run(body.chosenTargetLoad,sxId);
@@ -295,15 +308,39 @@ export function updateWarmupSettings(db, sessionId, sxId, body) {
   });
 }
 
+export function logHold(db, sessionId, setId, body) {
+  requireNumber(body.actualDurationSeconds,'actualDurationSeconds',{integer:true});
+  return mutate(db,sessionId,body,() => {
+    const row=db.prepare(`SELECT s.* FROM sets s JOIN session_exercises e ON e.id=s.session_exercise_id
+      WHERE s.id=? AND e.session_id=? AND e.tracking_mode_snapshot='duration' AND s.target_duration_seconds IS NOT NULL`).get(setId,sessionId);
+    if(!row) throw Object.assign(new Error('Hold not found'),{status:404});
+    if(row.status!=='pending') throw Object.assign(new Error('Hold is already resolved'),{status:409});
+    db.prepare("UPDATE sets SET actual_duration_seconds=?,status='completed',performed_at=? WHERE id=?").run(body.actualDurationSeconds,now(),setId);
+  });
+}
+
 export function logSet(db, sessionId, setId, body) {
   requireNumber(body.actualLoad,'actualLoad'); requireNumber(body.actualReps,'actualReps',{integer:true}); if(body.rir!=null) requireNumber(body.rir,'rir',{integer:true});
-  return mutate(db,sessionId,body,() => {const row=db.prepare(`SELECT s.*,se.session_id,se.prescription_snapshot FROM sets s JOIN session_exercises se ON se.id=s.session_exercise_id WHERE s.id=?`).get(setId);if(!row||row.session_id!==sessionId)throw Object.assign(new Error('Set not found'),{status:404});if(row.status!=='pending')throw Object.assign(new Error('Set is already resolved'),{status:409});db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=?,status='completed',performed_at=? WHERE id=?").run(body.actualLoad,body.actualReps,body.rir??null,now(),setId);const p=JSON.parse(row.prescription_snapshot);db.prepare('UPDATE sessions SET rest_ends_at=? WHERE id=?').run(restDeadline(p.restSeconds),sessionId)});
+  return mutate(db,sessionId,body,() => {const row=db.prepare(`SELECT s.*,se.session_id,se.prescription_snapshot FROM sets s JOIN session_exercises se ON se.id=s.session_exercise_id WHERE s.id=?`).get(setId);if(!row||row.session_id!==sessionId)throw Object.assign(new Error('Set not found'),{status:404});if(row.target_duration_seconds!=null)throw Object.assign(new Error('Use hold logging for timed holds'),{status:400});if(row.status!=='pending')throw Object.assign(new Error('Set is already resolved'),{status:409});db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=?,status='completed',performed_at=? WHERE id=?").run(body.actualLoad,body.actualReps,body.rir??null,now(),setId);const p=JSON.parse(row.prescription_snapshot);db.prepare('UPDATE sessions SET rest_ends_at=? WHERE id=?').run(restDeadline(p.restSeconds),sessionId)});
 }
 export function skipSet(db,sessionId,setId,body){return mutate(db,sessionId,body,()=>{const info=db.prepare("UPDATE sets SET status='skipped' WHERE id=? AND status='pending' AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(setId,sessionId);if(!info.changes)throw Object.assign(new Error('Pending set not found'),{status:404})})}
 export function addReps(db,sessionId,sxId,body){requireNumber(body.reps,'reps',{integer:true,min:1});return mutate(db,sessionId,body,()=>{const sx=db.prepare("SELECT * FROM session_exercises WHERE id=? AND session_id=? AND tracking_mode_snapshot='total_reps'").get(sxId,sessionId);if(!sx)throw Object.assign(new Error('Pull-up exercise not found'),{status:404});db.prepare('INSERT INTO pullup_entries VALUES (?,?,?,?,NULL)').run(uid('entry'),sxId,body.reps,now());db.prepare('UPDATE session_exercises SET actual_total_reps=COALESCE(actual_total_reps,0)+? WHERE id=?').run(body.reps,sxId);const p=JSON.parse(sx.prescription_snapshot);db.prepare('UPDATE sessions SET rest_ends_at=? WHERE id=?').run(restDeadline(p.restSeconds),sessionId)})}
 export function undoReps(db,sessionId,sxId,body){return mutate(db,sessionId,body,()=>{const last=db.prepare('SELECT * FROM pullup_entries WHERE session_exercise_id=? AND undone_at IS NULL ORDER BY rowid DESC LIMIT 1').get(sxId);if(!last)throw Object.assign(new Error('Nothing to undo'),{status:400});db.prepare('UPDATE pullup_entries SET undone_at=? WHERE id=?').run(now(),last.id);db.prepare('UPDATE session_exercises SET actual_total_reps=MAX(0,COALESCE(actual_total_reps,0)-?) WHERE id=?').run(last.reps,sxId)})}
 export function correctTotal(db,sessionId,sxId,body){requireNumber(body.actualTotalReps,'actualTotalReps',{integer:true});requireNumber(body.actualAddedLoad,'actualAddedLoad');return mutate(db,sessionId,body,()=>{db.prepare('UPDATE session_exercises SET actual_total_reps=?,actual_added_load=? WHERE id=? AND session_id=?').run(body.actualTotalReps,body.actualAddedLoad,sxId,sessionId)})}
-export function resolveExercise(db,sessionId,sxId,body,status){return mutate(db,sessionId,body,()=>{if(body.actualDurationSeconds!=null)requireNumber(body.actualDurationSeconds,'actualDurationSeconds',{integer:true});const info=db.prepare('UPDATE session_exercises SET status=?,actual_duration_seconds=? WHERE id=? AND session_id=?').run(status,body.actualDurationSeconds??null,sxId,sessionId);if(!info.changes)throw Object.assign(new Error('Exercise not found'),{status:404});db.prepare("UPDATE sets SET status='skipped' WHERE session_exercise_id=? AND status='pending'").run(sxId);db.prepare('UPDATE sessions SET active_exercise_order=active_exercise_order+1,rest_ends_at=NULL WHERE id=?').run(sessionId)})}
+export function resolveExercise(db,sessionId,sxId,body,status) {
+  return mutate(db,sessionId,body,()=>{
+    const sx=db.prepare('SELECT * FROM session_exercises WHERE id=? AND session_id=?').get(sxId,sessionId);
+    if(!sx) throw Object.assign(new Error('Exercise not found'),{status:404});
+    if(['wall','goblet'].includes(sx.exercise_id)) {
+      if(body.actualDurationSeconds!=null) throw Object.assign(new Error('Log each hold separately'),{status:400});
+      if(status==='completed' && !db.prepare("SELECT 1 FROM sets WHERE session_exercise_id=? AND status='completed'").get(sxId)) status='skipped';
+    }
+    if(body.actualDurationSeconds!=null) requireNumber(body.actualDurationSeconds,'actualDurationSeconds',{integer:true});
+    db.prepare('UPDATE session_exercises SET status=?,actual_duration_seconds=? WHERE id=?').run(status,body.actualDurationSeconds??null,sxId);
+    db.prepare("UPDATE sets SET status='skipped' WHERE session_exercise_id=? AND status='pending'").run(sxId);
+    db.prepare('UPDATE sessions SET active_exercise_order=active_exercise_order+1,rest_ends_at=NULL WHERE id=?').run(sessionId);
+  });
+}
 export function completeSession(db, sessionId, body) {
   return mutate(db, sessionId, body, () => finalizeSession(db, sessionId, instant(db).toISOString()), {actionKey:'complete'});
 }
@@ -332,4 +369,4 @@ export function resumeSession(db, sessionId, body) {
   return current.status !== 'in_progress' ? current : resumed;
 }
 
-export function correctSet(db,sessionId,setId,body){requireNumber(body.actualLoad,'actualLoad');requireNumber(body.actualReps,'actualReps',{integer:true});return mutate(db,sessionId,body,()=>{const info=db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=? WHERE id=? AND status='completed' AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(body.actualLoad,body.actualReps,body.rir??null,setId,sessionId);if(!info.changes)throw Object.assign(new Error('Completed set not found'),{status:404})}, {allowCompleted:true})}
+export function correctSet(db,sessionId,setId,body){requireNumber(body.actualLoad,'actualLoad');requireNumber(body.actualReps,'actualReps',{integer:true});return mutate(db,sessionId,body,()=>{const info=db.prepare("UPDATE sets SET actual_load=?,actual_reps=?,rir=? WHERE id=? AND status='completed' AND target_duration_seconds IS NULL AND session_exercise_id IN (SELECT id FROM session_exercises WHERE session_id=?)").run(body.actualLoad,body.actualReps,body.rir??null,setId,sessionId);if(!info.changes)throw Object.assign(new Error('Completed set not found'),{status:404})}, {allowCompleted:true})}

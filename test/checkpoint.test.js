@@ -12,7 +12,7 @@ test('JAK-6 complete Strength A persists exact snapshots and actuals',()=>{
   const today=getToday(db); assert.equal(today.recommendedTemplateId,'strength-a'); assert.deepEqual(today.templates.map(t=>t.id),['strength-a','strength-c']);
   const createRequest=rid();
   let s=createSession(db,{requestId:createRequest,templateId:'strength-a',performedDate:'2026-09-05',timezone:'America/Los_Angeles'});
-  assert.deepEqual(s.exercises.map(e=>e.name_snapshot),['Bench press','Romanian deadlift','Pull-ups','Knee / PT','Calf raise']);
+  assert.deepEqual(s.exercises.map(e=>e.name_snapshot),['Bench press','Romanian deadlift','Pull-ups','Wall squat','Goblet squat','Calf raise']);
   const retry=createSession(db,{requestId:createRequest,templateId:'strength-a',performedDate:'2026-09-05',timezone:'America/Los_Angeles'});
   assert.equal(retry.id,s.id);
   let bench=s.exercises[0];
@@ -45,7 +45,7 @@ test('JAK-6 complete Strength A persists exact snapshots and actuals',()=>{
   s=addReps(db,s.id,pull.id,{requestId:rid(),revision:s.revision,reps:8});assert.equal(s.exercises[2].actual_total_reps,14);
   s=resolveExercise(db,s.id,pull.id,{requestId:rid(),revision:s.revision},'completed');
   const pt=s.exercises[3];s=resolveExercise(db,s.id,pt.id,{requestId:rid(),revision:s.revision},'completed');assert.equal(s.exercises[3].actual_duration_seconds,null);
-  const calf=s.exercises[4];s=resolveExercise(db,s.id,calf.id,{requestId:rid(),revision:s.revision},'skipped');
+  const calf=s.exercises[5];s=resolveExercise(db,s.id,calf.id,{requestId:rid(),revision:s.revision},'skipped');
   s=completeSession(db,s.id,{requestId:rid(),revision:s.revision});assert.equal(s.status,'completed');
   db.close(); db=openDatabase(file); let reopened=getSession(db,s.id);
   assert.equal(reopened.exercises[0].sets.find(x=>x.id===work1.id).actual_load,145);assert.equal(reopened.exercises[0].sets.find(x=>x.id===work2.id).actual_reps,4);assert.equal(reopened.exercises[2].actual_total_reps,14);
