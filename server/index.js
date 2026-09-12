@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { openDatabase,getToday,createSession,getSession,setTarget,updateWarmupSettings,logSet,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet,cancelSession,saveSessionForLater,resumeSession,finalizeSavedSessions } from './db.js';
+import { openDatabase,getToday,createSession,getSession,setTarget,updateWarmupSettings,logSet,logHold,skipSet,addReps,undoReps,correctTotal,resolveExercise,completeSession,correctSet,cancelSession,saveSessionForLater,resumeSession,finalizeSavedSessions } from './db.js';
 
 const app=express(); const db=openDatabase();
 app.use((req,res,next)=>{
@@ -32,6 +32,7 @@ app.get('/api/sessions/:id',(req,res)=>{const x=getSession(db,req.params.id);x?r
 app.patch('/api/sessions/:id/exercises/:exerciseId/target',asyncRoute((req,res)=>res.json(setTarget(db,req.params.id,req.params.exerciseId,req.body))));
 app.patch('/api/sessions/:id/exercises/:exerciseId/warmup-settings',asyncRoute((req,res)=>res.json(updateWarmupSettings(db,req.params.id,req.params.exerciseId,req.body))));
 app.post('/api/sessions/:id/sets/:setId/log',asyncRoute((req,res)=>res.json(logSet(db,req.params.id,req.params.setId,req.body))));
+app.post('/api/sessions/:id/sets/:setId/hold',asyncRoute((req,res)=>res.json(logHold(db,req.params.id,req.params.setId,req.body))));
 app.post('/api/sessions/:id/sets/:setId/skip',asyncRoute((req,res)=>res.json(skipSet(db,req.params.id,req.params.setId,req.body))));
 app.post('/api/sessions/:id/exercises/:exerciseId/reps',asyncRoute((req,res)=>res.json(addReps(db,req.params.id,req.params.exerciseId,req.body))));
 app.post('/api/sessions/:id/exercises/:exerciseId/reps/undo',asyncRoute((req,res)=>res.json(undoReps(db,req.params.id,req.params.exerciseId,req.body))));

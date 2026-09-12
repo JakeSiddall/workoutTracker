@@ -90,7 +90,7 @@ for (const variant of ['legacy','custom-snapshot','custom-equipment','started','
   assert.equal(getSession(db,'active').revision,1);
   assert.throws(()=>setTarget(db,'active','active-trap',{requestId:request(),revision:0,chosenTargetLoad:182}),/changed elsewhere/);
   } else {
-    assert.deepEqual(active.sets,beforeSets);
+    assert.deepEqual(active.sets,beforeSets.map(s=>({...s,target_duration_seconds:null,actual_duration_seconds:null})));
     assert.equal(active.prescription.warmupEnabled,false);
     assert.equal(getSession(db,'active').revision,0);
   }

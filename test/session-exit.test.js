@@ -5,7 +5,7 @@ import {mkdtempSync,rmSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import Database from 'better-sqlite3';
-import {openDatabase,createSession,getSession,getToday,logSet,addReps,resolveExercise,
+import {openDatabase,createSession,getSession,getToday,logSet,logHold,addReps,resolveExercise,
   cancelSession,completeSession,saveSessionForLater,resumeSession,finalizeSavedSessions} from '../server/db.js';
 
 const body = session => ({requestId:randomUUID(),revision:session.revision});
@@ -22,6 +22,7 @@ function progress(db, session) {
   let s=logSet(db,session.id,set.id,{...body(session),actualLoad:135,actualReps:0,rir:2});
   s=addReps(db,s.id,s.exercises[2].id,{...body(s),reps:6});
   s=addReps(db,s.id,s.exercises[2].id,{...body(s),reps:4});
+  s=logHold(db,s.id,s.exercises[3].sets[0].id,{...body(s),actualDurationSeconds:65});
   return resolveExercise(db,s.id,s.exercises[3].id,body(s),'completed');
 }
 function assertFinal(before, after) {
